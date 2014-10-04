@@ -38,7 +38,6 @@ $test = select_user_annonces(2, $bdd);
 
 //echo get_days($test[0][1] . '-');
 
-get_days_remaning('2014-09-18');
 
 if(isset($_REQUEST["btn_poster"]))
 {
