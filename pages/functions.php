@@ -75,6 +75,7 @@ function get_days($date_user)
 function get_days_remaning($date_user)
 {
     $a_day_month = array(31,28,31,30,31,30,31,31,30,31,30,31);
+    $return = "";
     
     $date = split_separator($date_user . '-','-');
     
@@ -113,19 +114,19 @@ function get_days_remaning($date_user)
     {
         if($date->format('%R%a') == 0)
         {
-            echo 'Dernier jour de l\'annonce';
+            $return = 'Dernier jour de l\'annonce';
         }
         else
         {
-            echo $date->format('%a jours restants');
+            $return = $date->format('%a jours restants');
         }
     }
     else 
     {
-        echo 'Annonce Expirée';
+        $return = 'Annonce Expirée';
     }
     
-    
+    return $return;
 }
 
 
@@ -189,7 +190,7 @@ function display_table_user_annonces($array, $chemin_img, $dates_debut)
                                 '</div>'.
                                 '<div class="titre_user_annonce">'. $array[$i][0] .'</div>'.
                                 '<div class="date_user_annonces">'. $array[$i][1] .'</div>' .
-                                '<div class="date_user_annonces">'. get_days($dates_debut[$i][1] . '-') .'</div>' .
+                                '<div class="date_user_annonces">'. get_days_remaning($dates_debut[$i][1] . '-') .'</div>' .
                             '</div>';
         }
     }
