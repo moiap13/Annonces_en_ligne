@@ -1,0 +1,195 @@
+/* 
+    Document   : style
+    Created on : 4 mars 2014, 08:51:03
+    Author     : antonio
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+body
+{
+    width: 100%;
+    height: 100%;
+}
+/*******************************************************************************************************************************/
+/*******************************************************************************************************************************/
+/*******************************************************************************************************************************/
+#principal
+{
+    width: 1200px;
+    height: 860px;
+    margin: auto;
+    //background-color: red;
+    //border-radius: 25px; 
+    //box-shadow: 15px 15px 200px black;
+}
+/*******************************************************************************************************************************/
+/*******************************************************************************************************************************/
+/*******************************************************************************************************************************/
+#banniere
+{
+    width: 1200px;
+    height: 100px;
+}
+.div_banniere
+{
+    width: 240px;
+    height: 100px;
+    float : left;
+    font-size: 11pt;
+    text-align: center;
+}
+#titre_site
+{
+    font-size: 20pt;
+}
+#display_user
+{
+    font-size: 11pt;
+    color: red;
+}
+.div_banniere a:link
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: black;
+}
+.div_banniere a:visited
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: black;
+}
+.div_banniere a:hover
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: lime;
+}
+.div_banniere a:active
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: fuchsia;
+}
+/*******************************************************************************************************************************/
+/*******************************************************************************************************************************/
+/*******************************************************************************************************************************/
+#categorie
+{
+    width: 198px;
+    height: 680px;
+    margin-top: 25px;
+    float: left;
+    //background-color: red;
+    border : 1px solid black;
+    border-radius: 25px 0px 0px 0px;
+    //box-shadow: 15px 15px 20px black;
+}
+/*******************************************************************************************************************************/
+/*******************************************************************************************************************************/
+/*******************************************************************************************************************************/
+.disabled
+{
+    color: grey;
+    margin-top: 0px;
+    font-size: 11pt;
+}
+#contenent
+{
+    width: 999px;
+    height: 680px;
+    margin-top: 25px;
+    float: left;
+    //background-color: yellow;
+    //border-radius: 25px;
+    //box-shadow: 15px 15px 20px black;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    border-radius: 0px 25px 0px 0px;
+}
+#recherche
+{
+    width: 90%;
+    height: 100px;
+    margin: auto;
+    font-size: 42pt;
+}
+#recherche input
+{
+    margin-top: 20px;
+    width: 55%;
+    height: 50px; 
+    font-size: 30px;
+    font-family: Verdana;
+}
+#recherche p
+{
+    margin-left: 0px;    
+}
+#contenent p
+{
+    margin-left: 20px; 
+}
+#derniere_annonces
+{
+    width: 1000px;
+    height: 200px;
+    margin: auto;
+}
+.derniere_annonce
+{
+    width: 200px;
+    height: 200px;
+    background-color: red;
+    margin-right: 25px; 
+    margin-left: 25px; 
+    float: left;
+}
+#titre_derniere_annonces
+{
+    width: 1000px;
+    height: 20px;
+    margin: auto;
+    text-align: center;
+}
+.titre_derniere_annonce
+{
+    width: 200px;
+    height: 20px;
+    margin-right: 25px; 
+    margin-left: 25px; 
+    float: left;
+}
+#explications
+{
+    text-align: center;
+}
+#explications p
+{
+    margin-left: 0px;
+}
+/*******************************************************************************************************************************/
+/*******************************************************************************************************************************/
+/*******************************************************************************************************************************/
+#pied_page
+{
+    width: 1198px;
+    height: 50px;
+    float: left;
+    margin-bottom: 25px;
+    border : 1px solid black;
+    border-top: none;
+    border-radius: 0px 0px 25px 25px;
+}
+#pied_page div
+{
+    width: 400px;
+    height: 50px;
+    float: left;
+    text-align: center;
+}
