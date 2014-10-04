@@ -36,13 +36,24 @@ $today = create_date_today();
 
 $test = select_user_annonces(2, $bdd);
 
-//echo get_days($test[0][1] . '-');
-
-get_days_remaning('2014-09-20');
-
+echo get_days_remaning('2014-10-04');
 if(isset($_REQUEST["btn_poster"]))
 {
+    $nb = count($_FILES['photos']['name']);
     
+    
+    for($z=0;$z<$nb;$z++)
+    {
+        move_uploaded_file($_FILES['photos']['tmp_name'][$z], '../../img/annonces/'. $z .'.jpg');
+//        echo $_FILES['photos']['name'][$z];
+    }
+    
+    echo '<pre>';
+        
+        var_dump($_FILES);
+        echo '**********************************************';
+        var_dump($_REQUEST);
+    echo '</pre>';
 }
 
 ?>
@@ -106,7 +117,7 @@ and open the template in the editor.
                                 <p>Texte de l'annonce</p>
                             </div>
                             <div class="colonne_droite">
-                                <textarea rows="18" cols="40" required></textarea>
+                                <textarea rows="18" cols="40" required name="text_annonce"></textarea>
                             </div>
                         </div>
                         <div class="ligne_petite">
@@ -114,7 +125,7 @@ and open the template in the editor.
                                 <p>Date début (aaaa-mm-jj)</p>
                             </div>
                             <div class="colonne_droite">
-                                <input type="date" name="date_debut" min="<?php echo $today; ?>" class="grande_taille" required/>
+                                <input type="date" name="date_debut" min="<?php echo $today; ?>" value="<?php echo $today; ?>" class="grande_taille" required/>
                             </div>
                         </div>
                         <div class="ligne_petite">

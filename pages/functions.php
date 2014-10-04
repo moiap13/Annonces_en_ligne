@@ -1,8 +1,9 @@
 <?php
-function init_array()
+function var_dump_pre($var)
 {
-    $array = array("");
-    return $array();
+    echo '<pre>';
+        echo var_dump_pre($var);
+    echo '</pre>';
 }
 
 function split_separator($str, $separator)
@@ -63,13 +64,6 @@ function get_days($date_user)
 
     $date = $today->diff($date,1);
     return $date->format('%a jours');
-    
-    /*
-    echo '<pre>';
-        var_dump($date);
-    echo '</pre>';
-     * 
-     */
 }
 
 function get_days_remaning($date_user)
@@ -115,6 +109,10 @@ function get_days_remaning($date_user)
         if($date->format('%R%a') == 0)
         {
             $return = 'Dernier jour de l\'annonce';
+        }
+        else if($date->format('%R%a') == 1)
+        {
+            $return = '1 jour restant';
         }
         else
         {
