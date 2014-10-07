@@ -2,7 +2,7 @@
 function var_dump_pre($var)
 {
     echo '<pre>';
-        echo var_dump_pre($var);
+        echo var_dump($var);
     echo '</pre>';
 }
 
@@ -138,15 +138,20 @@ function get_days_remaning($date_user)
 * @return null
 */
 function debug($sObj = NULL) {
- echo '<pre>';
- if (is_null($sObj)) {
-   echo '|Object is NULL|' . "\n";
- } elseif (is_array($sObj) || is_object($sObj)) {
-   var_dump($sObj);
- } else {
-   echo '|' . $sObj . '|' . "\n";
- }
- echo '</pre>';
+echo '<pre>';
+ 
+ if (is_null($sObj)) 
+{
+    echo '|Object is NULL|' . "\n";
+} else if(is_array($sObj) || is_object($sObj)) 
+{
+    var_dump($sObj);
+} else 
+{
+    echo '|' . $sObj . '|' . "\n";
+}
+
+echo '</pre>';
 }
 
 function display_table_favoris($array, $chemin_img)
@@ -170,6 +175,23 @@ function display_table_favoris($array, $chemin_img)
     {
         $affichage = '<p class="warning_message">Vous n\'avez aucun favoris</p>';
     }
+    
+    return $affichage;
+}
+
+function display_combobox_categories($array)
+{
+    $affichage = '';
+         
+    $affichage = '<select name="categorie" id="cb_categorie" onchange="test(this.value)">';
+
+    for ($i=0;$i < count($array);$i++)
+    {
+        $affichage .= '<option value="' . $array[$i][0] . '">'. $array[$i][1] .'</option>';
+    }
+     
+    $affichage .= '<option value="new">Autre</option>';
+    $affichage .= '</select>';
     
     return $affichage;
 }
@@ -199,6 +221,8 @@ function display_table_user_annonces($array, $chemin_img, $dates_debut)
     
     return $affichage;
 }
+
+/************************************************************************************************************************/
 
 /*
  * @param type $db_name : the name of the database where you want to connect
@@ -303,4 +327,28 @@ function select_user_annonces($id, $bdd)
     $request = $bdd->query($request_sql);
     $request = $request->fetchAll();
     return $request;
+}
+
+function select_categories($bdd)
+{
+    $request = $bdd->query('select * from categorie');
+    $request = $request->fetchAll();
+    
+    return $request;
+}
+
+function insert_categorie($nom_categorie, $bdd)
+{
+    $request = $bdd->prepare('insert into categorie(nom_categorie) values('. $nom_categorie .')');
+    $request = $bdd->execute();
+}
+
+function ajout_annonce($titre, $text, $date,$id_user,$id_categorie,$active, $bdd)
+{
+    $sql = 'insert into annonces(titre,text,date_debut,id_user,id_categorie,active) values("'.$titre.'","'.$text.'", \''. $date .'\','. $id_user .','. $id_categorie .','. $active .')';
+    
+    $request = $bdd->prepare($sql);
+    $request = $bdd->execute();
+    
+    return $bdd->lastInsertId();
 }

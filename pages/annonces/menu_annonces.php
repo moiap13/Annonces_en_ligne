@@ -34,9 +34,12 @@ if($_SESSION["conn"])
 
 $today = create_date_today();
 
-$test = select_user_annonces(2, $bdd);
+$test = select_categories($bdd);
 
-echo get_days_remaning('2014-10-04');
+echo '<pre>';
+    var_dump($test);
+echo '</pre>';
+
 if(isset($_REQUEST["btn_poster"]))
 {
     $nb = count($_FILES['photos']['name']);
@@ -44,12 +47,11 @@ if(isset($_REQUEST["btn_poster"]))
     
     for($z=0;$z<$nb;$z++)
     {
-        move_uploaded_file($_FILES['photos']['tmp_name'][$z], '../../img/annonces/'. $z .'.jpg');
+        //move_uploaded_file($_FILES['photos']['tmp_name'][$z], '../../img/annonces/'. $z .'.jpg');
 //        echo $_FILES['photos']['name'][$z];
     }
     
     echo '<pre>';
-        
         var_dump($_FILES);
         echo '**********************************************';
         var_dump($_REQUEST);
@@ -104,40 +106,53 @@ and open the template in the editor.
                 <div id="inserer_annonce">
                     <form action="#" method="post" enctype="multipart/form-data">
                         <div class="titre">inserer une annonce</div>
-                        <div class="ligne_petite">
-                            <div class="colonne_gauche">
-                                <p>Titre de l'annonce</p>
+                        <div id="formulaire">
+                            
+                            <div class="ligne_petite">
+                                <div class="colonne_gauche">
+                                    <p>Titre de l'annonce</p>
+                                </div>
+                                <div class="colonne_droite">
+                                    <input type="text" name="tbx_titre_annonce" placeholder="Titre de l'annonce" class="grande_taille" require/>
+                                </div>
                             </div>
-                            <div class="colonne_droite">
-                                <input type="text" name="tbx_titre_annonce" placeholder="Titre de l'annonce" class="grande_taille" require/>
+                            <div id="ligne_grande">
+                                <div class="colonne_gauche">
+                                    <p>Texte de l'annonce</p>
+                                </div>
+                                <div class="colonne_droite">
+                                    <textarea rows="18" cols="40" required name="text_annonce"></textarea>
+                                </div>
                             </div>
-                        </div>
-                        <div id="ligne_grande">
-                            <div class="colonne_gauche">
-                                <p>Texte de l'annonce</p>
+                            <div class="ligne_petite" >
+                                <div class="colonne_gauche">
+                                    <p>Date début (aaaa-mm-jj)</p>
+                                </div>
+                                <div class="colonne_droite">
+                                    <input type="date" name="date_debut" min="<?php echo $today; ?>" value="<?php echo $today; ?>" class="grande_taille" required/>
+                                </div>
                             </div>
-                            <div class="colonne_droite">
-                                <textarea rows="18" cols="40" required name="text_annonce"></textarea>
+                            <div class="ligne_petite">
+                                <div class="colonne_gauche">
+                                    <p>Catégorie</p>
+                                </div>
+                                <div class="colonne_droite">
+                                    <?php echo display_combobox_categories(select_categories($bdd)) ?>
+                                    <input type="hidden" name="tbx_autre" id="tbx_autre" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="ligne_petite">
-                            <div class="colonne_gauche">
-                                <p>Date début (aaaa-mm-jj)</p>
+                            
+                            <div class="ligne_petite">
+                                <div class="colonne_gauche">
+                                    <p>Ajouter des photos</p>
+                                </div>
+                                <div class="colonne_droite">
+                                    <input type="file" name="photos[]"  class="grande_taille" multiple/>
+                                </div>
                             </div>
-                            <div class="colonne_droite">
-                                <input type="date" name="date_debut" min="<?php echo $today; ?>" value="<?php echo $today; ?>" class="grande_taille" required/>
+                            <div class="ligne_petite">
+                                <input type="submit" name="btn_poster" value="Publier l'annonce" id="btn_envoyer" required/>
                             </div>
-                        </div>
-                        <div class="ligne_petite">
-                            <div class="colonne_gauche">
-                                <p>Ajouter des photos</p>
-                            </div>
-                            <div class="colonne_droite">
-                                <input type="file" name="photos[]"  class="grande_taille" multiple/>
-                            </div>
-                        </div>
-                        <div class="ligne_petite">
-                            <input type="submit" name="btn_poster" value="Publier l'annonce" id="btn_envoyer" required/>
                         </div>
                     </form>
                 </div>
@@ -155,6 +170,23 @@ and open the template in the editor.
         </div>
         <script type="text/javascript">
             //Insere ton Javascript ;P
+            
+            function test(num)
+            {
+                var categorie = document.getElementById("cb_categorie");
+                var tbx = document.getElementById("tbx_autre");
+
+                if(num == "new")
+                {
+                    tbx.type = "text";
+                    tbx.required = true;
+                }
+                else
+                {
+                    tbx.type = "hidden";
+                    tbx.required = false;
+                }
+            }
         </script>
     </body>
 </html>
