@@ -126,8 +126,60 @@ function get_days_remaning($date_user)
     
     return $return;
 }
+function get_image_format_file($type)
+{
+    $format = "";
+    
+    switch ($type)
+    {
+        case 'image/png':
+            $format = '.png';
+            break;
+        case 'image/jpeg':
+            $format = '.jpg';
+            break;
+        case 'image/gif':
+            $format = '.gif';
+            break;
+        case 'image/bmp':
+            $format = '.bmp';
+            break;
+        case 'image/vnd.microsoft.icon':
+            $format = '.ico';
+            break;
+        case 'image/tiff':
+            $format = '.tif';
+            break;
+        case 'image/svg+xml':
+            $format = '.svg';
+            break;
+    }
+     
+    return $format;
+}
 
-
+function put_dirfile_array($path)
+{
+    $array = "";
+    $i =0;
+    
+    if ($dossier = opendir($path)) 
+    {
+        while (false !== ($file = readdir($dossier))) 
+        {
+            if ($file != "." && $file != "..") 
+            {
+                $array[$i] = $file;
+            }
+            
+            $i++;
+        }
+        
+        closedir($dossier);
+    }
+    
+    return $array;
+}
 
 /*
 * Debug function
@@ -154,7 +206,7 @@ echo '<pre>';
 echo '</pre>';
 }
 
-function display_table_favoris($array, $chemin_img)
+function display_table_favoris($array, $array_id_annonces)
 {
     $affichage = '';
     
@@ -163,17 +215,72 @@ function display_table_favoris($array, $chemin_img)
         for($i=0;$i<count($array);$i++)
         {
             $affichage .=   '<div class="favoris_table">' . 
-                                '<div class="photo_favoris">'.
-                                    '<img src="'. $chemin_img .'" width="100px" height="100px" />' .
-                                '</div>'.
-                                '<div class="titre_favoris">'. $array[$i][1] .'</div>'.
-                                '<div class="text_favoris">'. $array[$i][2] .'</div>' .
-                            '</div>';
+                                '<div class="photo_favoris">';
+            if($array[$i][3] == 1)
+            {
+                $str = put_dirfile_array('../../img/annonces/' . $array_id_annonces[$i][0] . '/');
+                $file_type = split_separator($str[2] . '.', '.');
+
+                $affichage .= '<img src="'. '../../img/annonces/' . $array_id_annonces[$i][0] . '/0.' . $file_type[1] .'" width="100px" height="100px" />';
+                        
+            }
+            else
+            {
+                $affichage .= '<img src="../../img/image_site/No_Image_Available.png" width="100px" height="100px" />';
+            }
+
+                $affichage .= '</div>'.
+                        '<div class="titre_favoris">'. $array[$i][1] .'</div>'.
+                        '<div class="text_favoris">'. $array[$i][2] .'</div>' .
+                    '</div>';
         }
     }
     else
     {
         $affichage = '<p class="warning_message">Vous n\'avez aucun favoris</p>';
+    }
+    
+    return $affichage;
+}
+
+
+
+function display_table_user_annonces($array)
+{
+    /*echo '<pre>';
+      var_dump_pre($array);
+    echo '</pre>';*/
+                        
+    $affichage = '';
+    
+    if(!empty($array))
+    {
+        for($i=0;$i<count($array);$i++)
+        {
+            $affichage .=   '<div class="user_annonces_table">' . 
+                                '<div class="photo_user_annonce">';
+                    if($array[$i][4] == 1)
+                    {
+                        $str = put_dirfile_array('../../img/annonces/' . $array[$i][0] . '/');
+                        $file_type = split_separator($str[2] . '.', '.');
+                        http://localhost:8888/Antonio/base_de_donee/annonces_en_ligne/img/image_site/No_Image_Available.png
+                        $affichage .= '<img src="'. '../../img/annonces/' . $array[$i][0] . '/0.' . $file_type[1] .'" width="100px" height="100px" />';
+                    }
+                    else
+                    {
+                        $affichage .= '<img src="../../img/image_site/No_Image_Available.png" width="100px" height="100px" />';
+                    }
+                                    
+                     $affichage .= '</div>'.
+                                '<div class="titre_user_annonce">'. $array[$i][1] .'</div>'.
+                                '<div class="date_user_annonces">'. $array[$i][2] .'</div>' .
+                                '<div class="date_user_annonces">'. get_days_remaning($array[$i][2] . '-') .'</div>' .
+                            '</div>';
+        }
+    }
+    else
+    {
+        $affichage = '<p class="warning_message">Vous n\'avez aucune annonces postée</p>';
     }
     
     return $affichage;
@@ -192,32 +299,6 @@ function display_combobox_categories($array)
      
     $affichage .= '<option value="new">Autre</option>';
     $affichage .= '</select>';
-    
-    return $affichage;
-}
-
-function display_table_user_annonces($array, $chemin_img, $dates_debut)
-{
-    $affichage = '';
-    
-    if(!empty($array))
-    {
-        for($i=0;$i<count($array);$i++)
-        {
-            $affichage .=   '<div class="user_annonces_table">' . 
-                                '<div class="photo_user_annonce">'.
-                                    '<img src="'. $chemin_img .'" width="100px" height="100px" />' .
-                                '</div>'.
-                                '<div class="titre_user_annonce">'. $array[$i][0] .'</div>'.
-                                '<div class="date_user_annonces">'. $array[$i][1] .'</div>' .
-                                '<div class="date_user_annonces">'. get_days_remaning($dates_debut[$i][1] . '-') .'</div>' .
-                            '</div>';
-        }
-    }
-    else
-    {
-        $affichage = '<p class="warning_message">Vous n\'avez aucune annonces postée</p>';
-    }
     
     return $affichage;
 }
@@ -309,7 +390,7 @@ function select_last_insert_ads($bdd)
 
 function select_pseudo_titre_favoris($id, $bdd)
 {
-    $request_sql = 'SELECT pseudo,titre,text '
+    $request_sql = 'SELECT pseudo,titre,text, photos '
                     . 'FROM favoris as f '
                     . 'JOIN user as u ON u.id_user = f.id_user '
                     . 'JOIN annonces as a ON a.id_annonce = f.id_annonce '
@@ -319,10 +400,18 @@ function select_pseudo_titre_favoris($id, $bdd)
     $request = $request->fetchAll();
     return $request;
 }
+function select_id_annonce($id, $bdd)
+{
+    $request_sql = 'SELECT id_annonce FROM favoris where id_user = ' . $id;
+    
+    $request = $bdd->query($request_sql);
+    $request = $request->fetchAll();
+    return $request;
+}
 
 function select_user_annonces($id, $bdd)
 {
-    $request_sql = 'select titre, date_debut, active FROM annonces where id_user='.$id;
+    $request_sql = 'select id_annonce, titre, date_debut, active, photos FROM annonces where id_user='.$id;
     
     $request = $bdd->query($request_sql);
     $request = $request->fetchAll();
@@ -331,24 +420,41 @@ function select_user_annonces($id, $bdd)
 
 function select_categories($bdd)
 {
-    $request = $bdd->query('select * from categorie');
+    $request = $bdd->query('select * from categorie group by(nom_categorie)');
     $request = $request->fetchAll();
     
     return $request;
 }
 
+function check_categorie($name, $bdd)
+{
+    $array = select_categories($bdd);
+    $return = true;
+    
+    for($i=0;$i<count($array);$i++)
+    {
+        if($array[$i][1] == $name)
+        {
+            $return = false;
+        }
+    }
+    
+    return $return;
+}
 function insert_categorie($nom_categorie, $bdd)
 {
-    $request = $bdd->prepare('insert into categorie(nom_categorie) values('. $nom_categorie .')');
-    $request = $bdd->execute();
+    $request = $bdd->prepare('insert into categorie(nom_categorie) values("'. $nom_categorie .'")');
+    $request->execute();
+    
+     return $bdd->lastInsertId();
 }
 
-function ajout_annonce($titre, $text, $date,$id_user,$id_categorie,$active, $bdd)
+function ajout_annonce($titre, $text, $date,$id_user,$id_categorie,$active, $photos, $bdd)
 {
-    $sql = 'insert into annonces(titre,text,date_debut,id_user,id_categorie,active) values("'.$titre.'","'.$text.'", \''. $date .'\','. $id_user .','. $id_categorie .','. $active .')';
+    $sql = 'insert into annonces(titre, text, date_debut, id_user, id_categorie, active, photos) values("'.$titre.'","'.$text.'","'. $date .'",'. $id_user .','. $id_categorie .','. $active .','. $photos. ' )';
     
     $request = $bdd->prepare($sql);
-    $request = $bdd->execute();
+    $request->execute();
     
     return $bdd->lastInsertId();
 }

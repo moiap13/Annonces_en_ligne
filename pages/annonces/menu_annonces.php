@@ -9,19 +9,22 @@ session_start();
  * Modification         :                                       *
  ****************************************************************/
 
-/*echo '<pre>';
-var_dump($_SESSION);
-echo '</pre>';*/
+
 
 include '../functions.php';
+
 
 $s_login = "Login";
 $s_url = "login.php";
 $pseudo = '';
+$today = create_date_today();
+
 
 $bdd = connexion('annonces_en_ligne', 'localhost', 'root', 'root');
 
-if($_SESSION["conn"])
+
+
+if(isset($_SESSION["conn"]) && $_SESSION["conn"])
 {
     $s_login = "unlog";
     $s_url = "disconnect.php";
@@ -31,31 +34,63 @@ if($_SESSION["conn"])
 {
     header("Location: not_connected.php");
 }
-
-$today = create_date_today();
-
-$test = select_categories($bdd);
-
-echo '<pre>';
-    var_dump($test);
-echo '</pre>';
+//$test = select_categories($bdd);
 
 if(isset($_REQUEST["btn_poster"]))
 {
-    $nb = count($_FILES['photos']['name']);
-    
-    
-    for($z=0;$z<$nb;$z++)
+    if(isset($_REQUEST["tbx_titre_annonce"], $_REQUEST["text_annonce"],  
+            $_REQUEST['date_debut'],$_REQUEST['categorie'] ))
     {
-        //move_uploaded_file($_FILES['photos']['tmp_name'][$z], '../../img/annonces/'. $z .'.jpg');
-//        echo $_FILES['photos']['name'][$z];
-    }
-    
-    echo '<pre>';
+        $titre = $_REQUEST["tbx_titre_annonce"];
+        $text = $_REQUEST["text_annonce"];
+        $date = $_REQUEST["date_debut"];
+        $id_categorie = $_REQUEST["categorie"];
+        $lastinsertid = -1;
+        
+        if($id_categorie == "new" && isset($_REQUEST['tbx_autre']))
+        {
+            if(check_categorie($_REQUEST['tbx_autre'], $bdd))
+            {
+               $id_categorie = insert_categorie($_REQUEST['tbx_autre'], $bdd);
+            }
+            else 
+            {
+                $id_categorie = 1;
+            }
+        }
+        
+        echo '<pre>';
         var_dump($_FILES);
-        echo '**********************************************';
-        var_dump($_REQUEST);
-    echo '</pre>';
+        echo '</pre>';
+        if(isset($_FILES['photos']))
+        {
+            echo '$_file';
+           $photos = 1;
+        }
+        else 
+        {
+            echo 'not $_file';
+            $photos = 0;
+        }
+        
+        $lastinsertid = ajout_annonce($titre, $text, $date, $_SESSION['ID'], $id_categorie, 1, $photos, $bdd);
+        
+        if($lastinsertid > -1)
+        {
+            $nb = count($_FILES['photos']['name']);
+        
+            mkdir('../../img/annonces/' . $lastinsertid);
+            
+            for($z=0;$z<$nb;$z++)
+            {
+                move_uploaded_file($_FILES['photos']['tmp_name'][$z], '../../img/annonces/'. $lastinsertid . '/' . $z . get_image_format_file($_FILES['photos']['type'][$z]));
+            }
+        }
+    }
+    else
+    {
+        echo 'Pas tous les champs ont été saisis';
+    }
 }
 
 ?>
@@ -99,7 +134,7 @@ and open the template in the editor.
                     <div class="titre">Favoris</div>
                     <div class="contour">
                         <?php 
-                            echo display_table_favoris(select_pseudo_titre_favoris($_SESSION['ID'], $bdd), '../../img/image_site/No_Image_Available.png');
+                            echo display_table_favoris(select_pseudo_titre_favoris($_SESSION['ID'], $bdd), select_id_annonce($_SESSION['ID'], $bdd));
                         ?>
                     </div>
                 </div>
@@ -147,7 +182,7 @@ and open the template in the editor.
                                     <p>Ajouter des photos</p>
                                 </div>
                                 <div class="colonne_droite">
-                                    <input type="file" name="photos[]"  class="grande_taille" multiple/>
+                                    <input type="file" name="photos[]"  class="grande_taille" multiple />
                                 </div>
                             </div>
                             <div class="ligne_petite">
@@ -159,8 +194,8 @@ and open the template in the editor.
                 <div id="user_annonces">
                     <div class="titre">Vos annonces</div>
                     <div class="contour">
-                        <?php  
-                            echo display_table_user_annonces(select_user_annonces($_SESSION['ID'], $bdd), '../../img/image_site/No_Image_Available.png', $test)
+                        <?php 
+                            echo display_table_user_annonces(select_user_annonces($_SESSION['ID'], $bdd));
                         ?>
                     </div>
                 </div>
