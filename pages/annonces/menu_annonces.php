@@ -59,23 +59,18 @@ if(isset($_REQUEST["btn_poster"]))
             }
         }
         
-        echo '<pre>';
-        var_dump($_FILES);
-        echo '</pre>';
-        if(isset($_FILES['photos']))
+        if(isset($_FILES['photos']['error'][0]) && $_FILES['photos']['error'][0] != 4)
         {
-            echo '$_file';
-           $photos = 1;
+            $photos = 1;
         }
         else 
         {
-            echo 'not $_file';
             $photos = 0;
         }
         
         $lastinsertid = ajout_annonce($titre, $text, $date, $_SESSION['ID'], $id_categorie, 1, $photos, $bdd);
         
-        if($lastinsertid > -1)
+        if($lastinsertid > -1 && $photos == 1)
         {
             $nb = count($_FILES['photos']['name']);
         
@@ -107,7 +102,7 @@ and open the template in the editor.
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="Content-Language" content="fr" />
         <meta http-equiv="Content-Script-Type" content="text/javascript" />
-        <link href="../../css/style_annonces_2.css" rel="stylesheet" type="text/css" />
+        <link href="../../css/style_menu_annonces.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <?php

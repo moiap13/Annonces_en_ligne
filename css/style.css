@@ -14,6 +14,31 @@ body
     width: 100%;
     height: 100%;
 }
+
+a:link
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: black;
+}
+a:visited
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: black;
+}
+a:hover
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: lime;
+}
+a:active
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: fuchsia;
+}
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
@@ -51,30 +76,6 @@ body
     font-size: 11pt;
     color: red;
 }
-.div_banniere a:link
-{
-    margin-top: 0px; 
-    text-decoration: none;
-    color: black;
-}
-.div_banniere a:visited
-{
-    margin-top: 0px; 
-    text-decoration: none;
-    color: black;
-}
-.div_banniere a:hover
-{
-    margin-top: 0px; 
-    text-decoration: none;
-    color: lime;
-}
-.div_banniere a:active
-{
-    margin-top: 0px; 
-    text-decoration: none;
-    color: fuchsia;
-}
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
@@ -88,6 +89,14 @@ body
     border : 1px solid black;
     border-radius: 25px 0px 0px 0px;
     //box-shadow: 15px 15px 20px black;
+}
+.display_categorie
+{
+    width: 90%;
+    height: 50px;
+    margin: auto;
+    text-align: center;
+    border-bottom: solid 1px black;
 }
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
@@ -145,10 +154,15 @@ body
 {
     width: 200px;
     height: 200px;
-    background-color: red;
     margin-right: 25px; 
     margin-left: 25px; 
     float: left;
+}
+.derniere_annonce img
+{
+    width: 100%;
+    height: 100%;
+    margin: auto;
 }
 #titre_derniere_annonces
 {

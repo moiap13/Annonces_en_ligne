@@ -38,9 +38,6 @@ else
     $lien_favoris = '<p class="disabled">Favoris</p>'; 
 }
 
-$a_dernieres_annonces = select_last_insert_ads($bdd);
-
-
 ?>
 <!--
 To change this template, choose Tools | Templates
@@ -80,7 +77,7 @@ and open the template in the editor.
                 </div>
             </div>
             <div id="categorie">
-                
+                <?php echo display_index_categorie(select_categories($bdd)); ?>
             </div>
             <div id="contenent">
                 <div id='recherche'>
@@ -88,32 +85,10 @@ and open the template in the editor.
                 </div>
                 <p>Dernières annonces :</p>
                 <div id="derniere_annonces">
-                    <div class='derniere_annonce'></div>
-                    <div class='derniere_annonce'></div>
-                    <div class='derniere_annonce'></div>
-                    <div class='derniere_annonce'></div>
+                    <?php echo display_picture_last_insert_ads(select_last_insert_ads($bdd)); ?>
                 </div>
                 <div id="titre_derniere_annonces">
-                    <div class='titre_derniere_annonce'>
-                        <?php
-                            if(isset($a_dernieres_annonces[0]))echo $a_dernieres_annonces[0][0];
-                        ?>
-                    </div>
-                    <div class='titre_derniere_annonce'>
-                        <?php
-                            if(isset($a_dernieres_annonces[1]))echo $a_dernieres_annonces[1][0];
-                        ?>
-                    </div>
-                    <div class='titre_derniere_annonce'>
-                        <?php
-                            if(isset($a_dernieres_annonces[2]))echo $a_dernieres_annonces[2][0];
-                        ?>
-                    </div>
-                    <div class='titre_derniere_annonce'>
-                        <?php
-                            if(isset($a_dernieres_annonces[3]))echo $a_dernieres_annonces[3][0];
-                        ?>
-                    </div>
+                    <?php echo display_last_insert_ads(select_last_insert_ads($bdd)); ?>
                 </div>
                 <div id='explications'>
                     <p>Bonjour et bienvenue</p>

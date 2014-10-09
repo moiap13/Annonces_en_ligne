@@ -1,4 +1,5 @@
 <?php
+
 function var_dump_pre($var)
 {
     echo '<pre>';
@@ -13,17 +14,20 @@ function split_separator($str, $separator)
     
     $i_index = 0;
     
-    for($i=0;$i< strlen($str) ;$i++)
+    if($str != "" && strlen($str) > 0)
     {
-        if($str[$i] != $separator)
+        for($i=0;$i< strlen($str) ;$i++)
         {
-            $str_2 .= $str[$i];
-        }
-        else
-        {
-            $array[$i_index] = $str_2;
-            $str_2 = "";
-            $i_index++;
+            if($str[$i] != $separator)
+            {
+                $str_2 .= $str[$i];
+            }
+            else
+            {
+                $array[$i_index] = $str_2;
+                $str_2 = "";
+                $i_index++;
+            }
         }
     }
     
@@ -181,6 +185,16 @@ function put_dirfile_array($path)
     return $array;
 }
 
+function dir_exist($dir)
+{
+    $result = false;
+    
+    if(file_exists($dir) && is_dir($dir))
+        $result = true;
+    
+    return $result;
+}
+
 /*
 * Debug function
 * 
@@ -204,6 +218,45 @@ echo '<pre>';
 }
 
 echo '</pre>';
+}
+
+function display_last_insert_ads($array)
+{
+    $affichage = '';
+    
+    for($i=0;$i<4;$i++)
+    {
+        $affichage .= '<div class="titre_derniere_annonce">';
+            $affichage .= $array[$i][1];
+        $affichage .= '</div>';
+    }
+    
+    return $affichage;
+}
+
+function display_picture_last_insert_ads($array)
+{  
+    $affichage = '';
+    
+    for($i=0;$i<4;$i++)
+    {
+        if(dir_exist('img/annonces/' . $array[$i][0]))
+        {
+            $str = put_dirfile_array('img/annonces/' . $array[$i][0] . '/');
+            
+            $file_type = split_separator($str[2] . '.', '.');
+
+            $affichage .= '<div class="derniere_annonce"><img src="img/annonces/' . $array[$i][0] . '/0.' . $file_type[1] .'"/></div>';
+
+        }
+        else
+        {
+            $affichage .= '<div class="derniere_annonce"><img src="img/image_site/No_Image_Available.png" width="100px" height="100px" /></div>';
+        }
+    }
+    
+    
+    return $affichage;
 }
 
 function display_table_favoris($array, $array_id_annonces)
@@ -263,7 +316,7 @@ function display_table_user_annonces($array)
                     {
                         $str = put_dirfile_array('../../img/annonces/' . $array[$i][0] . '/');
                         $file_type = split_separator($str[2] . '.', '.');
-                        http://localhost:8888/Antonio/base_de_donee/annonces_en_ligne/img/image_site/No_Image_Available.png
+                        
                         $affichage .= '<img src="'. '../../img/annonces/' . $array[$i][0] . '/0.' . $file_type[1] .'" width="100px" height="100px" />';
                     }
                     else
@@ -302,6 +355,19 @@ function display_combobox_categories($array)
     
     return $affichage;
 }
+function display_index_categorie($array)
+{
+    $affichage = "";
+    
+    for($i=0;$i<count($array);$i++)
+    {
+        $affichage .= '<div class="display_categorie">';
+        $affichage .= '<p><a href="pages/recherche.php?index_categorie=' . $array[$i][1] . '">' . $array[$i][1] . '</a></p>';
+        $affichage .= '</div>';
+    }
+    
+    return $affichage;
+}
 
 /************************************************************************************************************************/
 
@@ -334,7 +400,7 @@ function count_nb_user($bdd)
 
 function recuperer_id()
 {
-    $request = $bdd->query("select id_ from user");
+    $request = $bdd->query("select id_user from user");
     $request = $request->fetchAll();
     return $request[0][0];
 }
@@ -383,7 +449,7 @@ function ajout_personne($user, $password, $mail, $bdd)
 
 function select_last_insert_ads($bdd)
 {
-    $request = $bdd->query("select titre from annonces order by date_debut desc");
+    $request = $bdd->query("select id_annonce,titre from annonces order by date_debut desc");
     $request = $request->fetchAll();
     return $request;
 }
@@ -457,4 +523,9 @@ function ajout_annonce($titre, $text, $date,$id_user,$id_categorie,$active, $pho
     $request->execute();
     
     return $bdd->lastInsertId();
+}
+
+function select_annonces_from_categorie($name_categorie, $bdd)
+{
+    
 }

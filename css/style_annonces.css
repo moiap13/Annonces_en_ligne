@@ -18,6 +18,31 @@ body
 {
     float: right;
 }
+
+a:link
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: black;
+}
+a:visited
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: black;
+}
+a:hover
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: lime;
+}
+a:active
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: fuchsia;
+}
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
@@ -53,21 +78,6 @@ body
 {
     font-size: 11pt;
     color: red;
-}
-.div_banniere a:link
-{
-    text-decoration: none;
-    color: black;
-}
-.div_banniere a:visited
-{
-    text-decoration: none;
-    color: black;
-}
-.div_banniere a:hover
-{
-    text-decoration: none;
-    color: lime;
 }
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
