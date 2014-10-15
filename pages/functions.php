@@ -171,12 +171,11 @@ function put_dirfile_array($path)
     {
         while (false !== ($file = readdir($dossier))) 
         {
-            if ($file != "." && $file != "..") 
+            if ($file != "." && $file != ".." && $file != ".DS_Store") 
             {
                 $array[$i] = $file;
+                $i++;
             }
-            
-            $i++;
         }
         
         closedir($dossier);
@@ -206,7 +205,7 @@ function dir_exist($dir)
 function debug($sObj = NULL) {
 echo '<pre>';
  
- if (is_null($sObj)) 
+if (is_null($sObj)) 
 {
     echo '|Object is NULL|' . "\n";
 } else if(is_array($sObj) || is_object($sObj)) 
@@ -244,17 +243,16 @@ function display_picture_last_insert_ads($array)
         {
             $str = put_dirfile_array('img/annonces/' . $array[$i][0] . '/');
             
-            $file_type = split_separator($str[2] . '.', '.');
+            $file_type = split_separator($str[0] . '.', '.');
 
-            $affichage .= '<div class="derniere_annonce"><img src="img/annonces/' . $array[$i][0] . '/0.' . $file_type[1] .'"/></div>';
+            $affichage .= '<div class="derniere_annonce"><a href="pages/annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" ><img src="img/annonces/' . $array[$i][0] . '/0.' . $file_type[1] .'"/></a></div>';
 
         }
         else
         {
-            $affichage .= '<div class="derniere_annonce"><img src="img/image_site/No_Image_Available.png" width="100px" height="100px" /></div>';
+            $affichage .= '<div class="derniere_annonce"><a href="pages/annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" ><img src="img/image_site/No_Image_Available.png" width="100px" height="100px" /></a></div>';
         }
     }
-    
     
     return $affichage;
 }
@@ -283,9 +281,9 @@ function display_table_favoris($array, $array_id_annonces)
             }
 
                 $affichage .= '</div>'.
-                        '<div class="titre_favoris">'. $array[$i][1] .'</div>'.
-                        '<div class="text_favoris">'. $array[$i][2] .'</div>' .
-                    '</div>';
+                                    '<div class="titre_favoris">'. $array[$i][1] .'</div>'.
+                                    '<div class="text_favoris">'. $array[$i][2] .'</div>' .
+                                '</div>';
         }
     }
     else
@@ -312,23 +310,23 @@ function display_table_user_annonces($array)
         {
             $affichage .=   '<div class="user_annonces_table">' . 
                                 '<div class="photo_user_annonce">';
-                    if($array[$i][4] == 1)
-                    {
-                        $str = put_dirfile_array('../../img/annonces/' . $array[$i][0] . '/');
-                        $file_type = split_separator($str[2] . '.', '.');
-                        
-                        $affichage .= '<img src="'. '../../img/annonces/' . $array[$i][0] . '/0.' . $file_type[1] .'" width="100px" height="100px" />';
-                    }
-                    else
-                    {
-                        $affichage .= '<img src="../../img/image_site/No_Image_Available.png" width="100px" height="100px" />';
-                    }
-                                    
-                     $affichage .= '</div>'.
-                                '<div class="titre_user_annonce">'. $array[$i][1] .'</div>'.
-                                '<div class="date_user_annonces">'. $array[$i][2] .'</div>' .
-                                '<div class="date_user_annonces">'. get_days_remaning($array[$i][2] . '-') .'</div>' .
-                            '</div>';
+            if($array[$i][4] == 1)
+            {
+                $str = put_dirfile_array('../../img/annonces/' . $array[$i][0] . '/');
+                $file_type = split_separator($str[2] . '.', '.');
+
+                $affichage .= '<img src="'. '../../img/annonces/' . $array[$i][0] . '/0.' . $file_type[1] .'" width="100px" height="100px" />';
+            }
+            else
+            {
+                $affichage .= '<img src="../../img/image_site/No_Image_Available.png" width="100px" height="100px" />';
+            }
+
+             $affichage .= '</div>'.
+                        '<div class="titre_user_annonce">'. $array[$i][1] .'</div>'.
+                        '<div class="date_user_annonces">'. $array[$i][2] .'</div>' .
+                        '<div class="date_user_annonces">'. get_days_remaning($array[$i][2] . '-') .'</div>' .
+                    '</div>';
         }
     }
     else
@@ -355,15 +353,27 @@ function display_combobox_categories($array)
     
     return $affichage;
 }
-function display_index_categorie($array)
+function display_index_categorie($array, $mode)
 {
     $affichage = "";
     
-    for($i=0;$i<count($array);$i++)
+    if($mode == 0)
     {
-        $affichage .= '<div class="display_categorie">';
-        $affichage .= '<p><a href="pages/recherche.php?index_categorie=' . $array[$i][1] . '">' . $array[$i][1] . '</a></p>';
-        $affichage .= '</div>';
+        for($i=0;$i<count($array);$i++)
+        {
+            $affichage .= '<div class="display_categorie">';
+            $affichage .= '<p><a href="pages/recherche.php?index_categorie=' . $array[$i][1] . '">' . $array[$i][1] . '</a></p>';
+            $affichage .= '</div>';
+        }
+    }
+    else if($mode == 1)
+    {
+        for($i=0;$i<count($array);$i++)
+        {
+            $affichage .= '<div class="display_categorie">';
+            $affichage .= '<p><a href="../recherche.php?index_categorie=' . $array[$i][1] . '">' . $array[$i][1] . '</a></p>';
+            $affichage .= '</div>';
+        }
     }
     
     return $affichage;
@@ -528,4 +538,18 @@ function ajout_annonce($titre, $text, $date,$id_user,$id_categorie,$active, $pho
 function select_annonces_from_categorie($name_categorie, $bdd)
 {
     
+}
+
+function select_annonces_from_id($id, $bdd)
+{
+    $request = $bdd->query('select titre, text, photos, date_debut, id_user from annonces where id_annonce = ' . $id);
+    return $request->fetchAll();
+    
+     
+}
+
+function select_user_from_id($id, $bdd)
+{
+   $request = $bdd->query('select pseudo, mail from user where id_user = ' . $id);
+   return $request->fetchAll(); 
 }

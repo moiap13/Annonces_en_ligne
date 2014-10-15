@@ -77,11 +77,13 @@ and open the template in the editor.
                 </div>
             </div>
             <div id="categorie">
-                <?php echo display_index_categorie(select_categories($bdd)); ?>
+                <?php echo display_index_categorie(select_categories($bdd), 0); ?>
             </div>
             <div id="contenent">
                 <div id='recherche'>
-                    <p>Recherche : <input type="text" name="tbx_search" placeholder="Recherche..."/></p>    
+                    <label>Recherche :</label>
+                    <input type="text" name="tbx_search" placeholder="Recherche..." id="tbx_search"/>
+                    <input type="image" src="img/image_site/image_search.png" name="btn_search"  id="btn_search"/>   
                 </div>
                 <p>Dernières annonces :</p>
                 <div id="derniere_annonces">

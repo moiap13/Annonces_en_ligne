@@ -9,26 +9,43 @@ session_start();
  * Modification         :                                       *
  ****************************************************************/
 
-include './functions.php';
+/*echo '<pre>';
+var_dump($_SESSION);
+echo '</pre>';*/
+
+include '../functions.php';
 
 $s_login = "Login";
 $s_url = "login.php";
 $pseudo = '';
-$mot_rechercher = '';
-$today = create_date_today();
 
 $bdd = connexion('annonces_en_ligne', 'localhost', 'root', 'root');
 
-if(isset($_SESSION["conn"]) && $_SESSION["conn"])
+if(isset($_SESSION['conn']) && $_SESSION['conn'])
 {
     $s_login = "unlog";
     $s_url = "disconnect.php";
     $pseudo = 'Bienvenue ' . $_SESSION['pseudo'];
+
+    $lien_menu_annonces =  '<p><a href="./menu_annonces.php">Menu annonces</a></p>';
+}
+else
+{
+    $lien_menu_annonces = '<p class="disabled">Menu annonces</p>';
 }
 
-if(isset($_REQUEST['index_categorie']))
+if(isset($_REQUEST['id_annonce']))
 {
-    $mot_rechercher = $_REQUEST['index_categorie'];
+    $annonce = select_annonces_from_id($_REQUEST['id_annonce'], $bdd);
+    
+    $titre = $annonce[0][0];
+    $text = $annonce[0][1];
+    $photos = $annonce[0][2];
+    $date = $annonce[0][3];
+    
+    $user = select_user_from_id($annonce[0][4], $bdd) ;
+    $pseudo = $user[0][0];
+    $mail = $user[0][1];
 }
 ?>
 <!--
@@ -44,7 +61,7 @@ and open the template in the editor.
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="Content-Language" content="fr" />
         <meta http-equiv="Content-Script-Type" content="text/javascript" />
-        <link href="../css/style.css" rel="stylesheet" type="text/css" />
+        <link href="../../css/style_view_annonces.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <?php
@@ -56,38 +73,48 @@ and open the template in the editor.
                 <div class="div_banniere">
                     <p id="display_user"><?php echo $pseudo; ?></p>
                 </div>
-                <div class="div_banniere"><p id="titre_site"><a href="../index.php">AnnoLigne<br/>Site d'annonce en ligne</a></p></div>
+                <div class="div_banniere"><p id="titre_site"><a href="../../index.php">AnnoLigne<br/>Site d'annonce en ligne</a></p></div>
                 <div class="div_banniere">
                     <a href="../connection/<?php echo $s_url; ?>"><?php echo $s_login; ?></a>
                 </div>
                 <div class="div_banniere">
-                    <p><a href="./menu_annonces.php">Menu annonces</a></p>
-                    <p><a href="./ajouter_annonces.php">Insérer annonces</a></p>
-                    <p><a href="./favoris.php">Favoris</a></p>
+                    <?php
+                        echo $lien_menu_annonces;
+                    ?>
                 </div>
             </div>
             <div id="categorie">
                 <?php echo display_index_categorie(select_categories($bdd), 1); ?>
             </div>
             <div id="contenent">
-                <div id='recherche'>
-                    <label>Recherche :</label>
-                    <input type="text" name="tbx_search" placeholder="Recherche..." id="tbx_search" value="<?php echo $mot_rechercher; ?>"/>
-                    <input type="submit" name="btn_search" value="search" id="btn_search"/>   
-                </div>
-                <div id="annonce_recherche">
-                    <div id="annonce_trouvee">
-                        <div id="annonces_recherche_photo">
+                <div id="view_annonce">
+                    <div id="titre">
+                        <?php echo $titre; ?>
+                    </div>
+                    <div id="photos">
+                        <div id="photo_principale">
                             
                         </div>
-                        <div id="annonces_recherche_titre">
+                        <div id="photos_miniatures">
                             
                         </div>
-                        <div id="annonces_recherche_texte">
-                            
+                    </div>
+                    <div id="enveloppe_text">
+                        <div id="text">
+                            <?php echo $text; ?>
                         </div>
-                        <div id="annonces_recherche_prix">
-                            
+                    </div>
+                    <div id="infos">
+                        <div class="info">
+                            Pseudo de l'annonceur : <span class="red">
+                            <?php echo $pseudo; ?>
+                            </span>
+                        </div>
+                        <div class="info">
+                            <?php echo '<a href="mailto:' . $mail . '">Contacter l\'anonceur par mail</a>'; ?>
+                        </div>
+                        <div class="info">
+                            <?php echo 'annonce parrue le : <span class="red">' . $date . '</span>'; ?>
                         </div>
                     </div>
                 </div>

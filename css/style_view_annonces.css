@@ -14,6 +14,10 @@ body
     width: 100%;
     height: 100%;
 }
+.a_droite
+{
+    float: right;
+}
 
 a:link
 {
@@ -39,17 +43,20 @@ a:active
     text-decoration: none;
     color: fuchsia;
 }
+.red 
+{
+    color : red;
+}
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
 #principal
 {
     width: 1200px;
-    height: 860px;
+    height: 680px;
     margin: auto;
-    //background-color: red;
-    //border-radius: 25px; 
-    //box-shadow: 15px 15px 200px black;
+    /*border-radius: 25px; 
+    box-shadow: 15px 15px 200px black;*/
 }
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
@@ -59,17 +66,17 @@ a:active
     width: 1200px;
     height: 100px;
 }
+#titre_site
+{
+    font-size: 20pt;
+}
 .div_banniere
 {
     width: 240px;
     height: 100px;
     float : left;
-    font-size: 11pt;
+    font-size: 12pt;
     text-align: center;
-}
-#titre_site
-{
-    font-size: 20pt;
 }
 #display_user
 {
@@ -101,12 +108,6 @@ a:active
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
-.disabled
-{
-    color: grey;
-    margin-top: 0px;
-    font-size: 11pt;
-}
 #contenent
 {
     width: 999px;
@@ -121,130 +122,75 @@ a:active
     border-bottom: 1px solid black;
     border-radius: 0px 25px 0px 0px;
 }
-#recherche
+#view_annonce
 {
-    width: 90%;
-    height: 100px;
-    margin: auto;
-    font-size: 42pt;
-}
-#tbx_search
-{
-    margin-top: 20px;
-    width: 55%;
-    height: 50px; 
-    font-size: 30px;
-    font-family: Verdana;
-}
-#btn_search
-{
-    width: 50px;
-    height: 60px;
-    font-size : 60px;
-    background: url('../img/image_site/image_search.png');
-}
-#recherche p
-{
-    margin-left: 0px;    
-}
-#contenent p
-{
-    margin-left: 20px; 
-}
-#derniere_annonces
-{
-    width: 1000px;
-    height: 200px;
+    width: 95%;
+    height: 100%;
     margin: auto;
 }
-.derniere_annonce
-{
-    width: 200px;
-    height: 200px;
-    margin-right: 25px; 
-    margin-left: 25px; 
-    float: left;
-}
-.derniere_annonce img
+#titre
 {
     width: 100%;
-    height: 100%;
-    margin: auto;
-}
-#titre_derniere_annonces
-{
-    width: 1000px;
-    height: 20px;
-    margin: auto;
-    text-align: center;
-}
-.titre_derniere_annonce
-{
-    width: 200px;
-    height: 20px;
-    margin-right: 25px; 
-    margin-left: 25px; 
-    float: left;
-}
-/*******************************************************************************************************************************/
-/************************************************** Page Recherche *************************************************************/
-/*******************************************************************************************************************************/
-#annonce_recherche
-{
-    width: 90%;
-    height: 500px;
-    margin: auto;
-    //overflow: auto;
-    background-color: red;
-}
-
-#annonce_trouvee
-{
-    width: 90%;
-    height: 200px;
-    margin: auto;
-    background-color: aquamarine;
-}
-
-#annonces_recherche_photo
-{
-    width: 25%;
-    height: 200px;
-    background-color: purple;
-    float: left;
-}
-#annonces_recherche_titre
-{
-    width: 65%;
     height: 70px;
-    background-color: yellow;
-    float: left;
-}
-#annonces_recherche_texte
-{
-    width: 65%;
-    height: 130px;
-    background-color: grey;
-    float: left;
-}
-#annonces_recherche_prix
-{
-    width: 10%;
-    height: 100%;
-    background-color: lime;
-    float: left;
-    margin-top:-70px;
-}
-/*******************************************************************************************************************************/
-/*******************************************************************************************************************************/
-/*******************************************************************************************************************************/
-#explications
-{
+    margin: auto;
+    margin-top: 30px;
+    //margin-bottom: 30px;
+    font-size: 30pt;
     text-align: center;
 }
-#explications p
+#photos
 {
-    margin-left: 0px;
+    width: 350px;
+    height: 500px;
+    float: left;
+    //background-color: yellow;
+}
+#photo_principale
+{
+    width: 100%;
+    height: 350px;
+    /*background-color: green;*/
+}
+#photos_miniatures
+{
+    width: 100%;
+    height: 100px;
+    margin-top: 40px;
+    float: left;
+    /*background-color: grey;*/
+}
+#enveloppe_text
+{
+    width: 63%;
+    height: 500px;
+    float: left;
+    /*border-left: solid black 1px;*/
+}
+#text
+{
+    width: 350px;
+    height: 450px;
+    font-size: 20pt;
+    text-align: center;
+    margin: auto;
+    margin-top: 50px;
+}
+#infos
+{
+    width: 100%;
+    height: 80px;
+    float: left;
+    border-top: solid black 1px;
+    border-left: solid black 1px;
+}
+.info
+{
+    width: 33.2%;
+    height: 50px;
+    padding-top: 30px;
+    float: left;
+    text-align: center;
+    border-right: solid black 1px;
 }
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
