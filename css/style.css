@@ -107,6 +107,12 @@ a:active
     margin-top: 0px;
     font-size: 11pt;
 }
+.warning_message
+{
+    text-align: center;
+    color: red;
+    margin-top: 100px;  
+}
 #contenent
 {
     width: 999px;
@@ -194,8 +200,8 @@ a:active
     width: 90%;
     height: 500px;
     margin: auto;
-    //overflow: auto;
-    background-color: red;
+    overflow: auto;
+    //background-color: red;
 }
 
 #annonce_trouvee
@@ -203,37 +209,46 @@ a:active
     width: 90%;
     height: 200px;
     margin: auto;
-    background-color: aquamarine;
+    border-top: solid 2px black;
+    //background-color: aquamarine;
 }
 
 #annonces_recherche_photo
 {
     width: 25%;
-    height: 200px;
-    background-color: purple;
+    height: 201px;
+    //background-color: purple;
     float: left;
+    border-bottom: solid 2px black;
 }
 #annonces_recherche_titre
 {
     width: 65%;
     height: 70px;
-    background-color: yellow;
+    //background-color: yellow;
     float: left;
+    text-align: center;
+    border-bottom: solid 1px black;
 }
 #annonces_recherche_texte
 {
     width: 65%;
     height: 130px;
-    background-color: grey;
+    //background-color: grey;
     float: left;
+    text-align: center;
+    border-bottom: solid 2px black;
 }
 #annonces_recherche_prix
 {
     width: 10%;
-    height: 100%;
-    background-color: lime;
+    height: 60%;
+    padding-top: 80px;
+    //background-color: lime;
     float: left;
     margin-top:-70px;
+    text-align: center;
+    border-bottom: solid 2px black;
 }
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/

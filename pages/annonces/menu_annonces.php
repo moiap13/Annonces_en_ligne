@@ -135,7 +135,7 @@ and open the template in the editor.
                 </div>
                 <div id="inserer_annonce">
                     <form action="#" method="post" enctype="multipart/form-data">
-                        <div class="titre">inserer une annonce</div>
+                        <div class="titre">Inserer une annonce</div>
                         <div id="formulaire">
                             
                             <div class="ligne_petite">
@@ -151,7 +151,15 @@ and open the template in the editor.
                                     <p>Texte de l'annonce</p>
                                 </div>
                                 <div class="colonne_droite">
-                                    <textarea rows="18" cols="40" required name="text_annonce"></textarea>
+                                    <textarea rows="15" cols="40" required name="text_annonce"></textarea>
+                                </div>
+                            </div>
+                            <div class="ligne_petite" >
+                                <div class="colonne_gauche">
+                                    <p>Prix</p>
+                                </div>
+                                <div class="colonne_droite">
+                                    <input type="text" name="tbx_prix" placeholder="Prix en CHF" class="grande_taille" required/>
                                 </div>
                             </div>
                             <div class="ligne_petite" >

@@ -94,7 +94,8 @@ and open the template in the editor.
                 </div>
                 <div id='explications'>
                     <p>Bonjour et bienvenue</p>
-                    <p>Ce site a été crée par <a href='mailto:antonio.pisanello.cfpt.ei@gmail.com'>Antonio Pisanello</a>. 
+                    <p>
+                       Ce site a été crée par <a href='mailto:antonio.pisanello.cfpt.ei@gmail.com'>Antonio Pisanello</a>. 
                        Le but de ce site est de pouvoir publier des annonces et trouver les annonces qui vous intérressent.
                     </p>
                     <p>

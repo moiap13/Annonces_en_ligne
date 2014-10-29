@@ -30,6 +30,8 @@ if(isset($_REQUEST['index_categorie']))
 {
     $mot_rechercher = $_REQUEST['index_categorie'];
 }
+
+
 ?>
 <!--
 To change this template, choose Tools | Templates
@@ -67,7 +69,7 @@ and open the template in the editor.
                 </div>
             </div>
             <div id="categorie">
-                <?php echo display_index_categorie(select_categories($bdd), 1); ?>
+                <?php echo display_index_categorie(select_categories($bdd), 2); ?>
             </div>
             <div id="contenent">
                 <div id='recherche'>
@@ -76,20 +78,7 @@ and open the template in the editor.
                     <input type="submit" name="btn_search" value="search" id="btn_search"/>   
                 </div>
                 <div id="annonce_recherche">
-                    <div id="annonce_trouvee">
-                        <div id="annonces_recherche_photo">
-                            
-                        </div>
-                        <div id="annonces_recherche_titre">
-                            
-                        </div>
-                        <div id="annonces_recherche_texte">
-                            
-                        </div>
-                        <div id="annonces_recherche_prix">
-                            
-                        </div>
-                    </div>
+                    <?php echo display_annonces_from_id(select_annonces_from_categorie($mot_rechercher, $bdd)); ?>
                 </div>
             </div>
             <div id="pied_page">

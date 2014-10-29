@@ -38,14 +38,26 @@ if(isset($_REQUEST['id_annonce']))
 {
     $annonce = select_annonces_from_id($_REQUEST['id_annonce'], $bdd);
     
+    /*echo '<pre>';
+    var_dump($annonce);
+    echo '</pre>';*/
     $titre = $annonce[0][0];
     $text = $annonce[0][1];
-    $photos = $annonce[0][2];
+    $photo = $annonce[0][2];
     $date = $annonce[0][3];
     
     $user = select_user_from_id($annonce[0][4], $bdd) ;
-    $pseudo = $user[0][0];
+    $pseudo_annonceur = $user[0][0];
     $mail = $user[0][1];
+    
+    if($photo == 1)
+    {
+        $photos = display_photo_view_annonce($_REQUEST['id_annonce']);
+    }
+    else
+    {
+        $photos[0] = '<img src="../../img/image_site/No_Image_Available.png" alt="no_image" />';
+    }
 }
 ?>
 <!--
@@ -93,10 +105,15 @@ and open the template in the editor.
                     </div>
                     <div id="photos">
                         <div id="photo_principale">
-                            
+                            <?php echo $photos[0]; ?>
                         </div>
                         <div id="photos_miniatures">
-                            
+                            <?php
+                                if($photos[count($photos)-1] == 'multi')
+                                {
+                                    echo display_photo_miniatures($photos);
+                                }
+                            ?>
                         </div>
                     </div>
                     <div id="enveloppe_text">
@@ -107,7 +124,7 @@ and open the template in the editor.
                     <div id="infos">
                         <div class="info">
                             Pseudo de l'annonceur : <span class="red">
-                            <?php echo $pseudo; ?>
+                            <?php echo $pseudo_annonceur; ?>
                             </span>
                         </div>
                         <div class="info">
