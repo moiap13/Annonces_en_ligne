@@ -137,6 +137,10 @@ a:active
     border-radius: 25px 25px 0px 0px;
     font-size: 14pt;
 }
+#contenent img
+{
+    border-radius: 100px;
+}
 #favoris
 {
     width: 28%;
@@ -160,7 +164,7 @@ a:active
 }
 .titre_favoris
 {
-    width: 218px;
+    width: 63%;
     height: 35%;
     float: left;
     text-align: center;
@@ -169,10 +173,11 @@ a:active
 }
 .text_favoris
 {
-    width: 218px;
-    height: 65%;
+    width: 63%;
+    height: 64%;
     float: left;
     text-align: center;
+    overflow: auto;
     //background-color: lime;
 }
 #formulaire
@@ -241,6 +246,7 @@ a:active
     border-bottom: 2px solid black;
     margin-top: 10px;
     margin-bottom: 10px;
+    //background-color: aqua;
 }
 .photo_user_annonce
 {
@@ -251,7 +257,7 @@ a:active
 }
 .titre_user_annonce
 {
-    width: 68%;
+    width: 63%;
     height: 35%;
     float: left;
     text-align: center;
@@ -260,12 +266,50 @@ a:active
 }
 .date_user_annonces
 {
-    width: 68%;
+    width: 63%;
     height: 32%;
     float: left;
     text-align: center;
     //border-bottom: solid 1px black;
     //background-color: lime;
+}
+.menu_rapide
+{
+    width: 5%;
+    height: 100px;
+    float: right;
+    //background-color: purple;
+}
+.menu_rapide div
+{
+    width: 100%;
+    height: 50%;
+    //background-color: red;
+}
+
+.menu_rapide div a:link
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: lightgrey;
+}
+.menu_rapide div a:visited
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: lightgrey;
+}
+.menu_rapide div a:hover
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: black;
+}
+.menu_rapide div a:active
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: fuchsia;
 }
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/

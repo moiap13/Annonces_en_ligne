@@ -28,14 +28,10 @@ if(isset($_SESSION['conn']) && $_SESSION['conn'])
     $pseudo = 'Bienvenue ' . $_SESSION['pseudo'];
 
     $lien_menu_annonces =  '<p><a href="pages/annonces/menu_annonces.php">Menu annonces</a></p>';
-    $lien_inserer_annonces = '<p><a href="pages/annonces/ajouter_annonces.php">Insérer annonces</a></p>';
-    $lien_favoris = '<p><a href="pages/annonces/favoris.php">Favoris</a></p>';
 }
 else
 {
     $lien_menu_annonces = '<p class="disabled">Menu annonces</p>';
-    $lien_inserer_annonces = '<p class="disabled">Insérer annonces</p>';
-    $lien_favoris = '<p class="disabled">Favoris</p>'; 
 }
 
 ?>
@@ -71,8 +67,6 @@ and open the template in the editor.
                 <div class="div_banniere">
                     <?php
                         echo $lien_menu_annonces;
-                        echo $lien_inserer_annonces;
-                        echo $lien_favoris;
                     ?>
                 </div>
             </div>

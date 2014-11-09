@@ -111,7 +111,7 @@ a:active
 {
     text-align: center;
     color: red;
-    margin-top: 100px;  
+    //margin-top: 100px;  
 }
 #contenent
 {
@@ -126,6 +126,10 @@ a:active
     border-right: 1px solid black;
     border-bottom: 1px solid black;
     border-radius: 0px 25px 0px 0px;
+}
+#contenent img
+{
+    border-radius: 100px;
 }
 #recherche
 {
@@ -176,6 +180,7 @@ a:active
     width: 100%;
     height: 100%;
     margin: auto;
+    border-radius: 100px;
 }
 #titre_derniere_annonces
 {

@@ -114,6 +114,13 @@ a:active
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
 /*******************************************************************************************************************************/
+.warning_message
+{
+    //text-align: center;
+    font-size: 23pt;
+    color: red;
+    //margin-top: 100px;  
+}
 #contenent
 {
     width: 999px;
@@ -131,8 +138,9 @@ a:active
 #view_annonce
 {
     width: 95%;
-    height: 100%;
+    height: 650px;
     margin: auto;
+    //background-color: green;
 }
 #titre
 {
@@ -155,7 +163,7 @@ a:active
 {
     width: 100%;
     height: 350px;
-    /*background-color: green;*/
+    //background-color: green;
 }
 #photo_principale img
 {
@@ -168,14 +176,17 @@ a:active
     height: 100px;
     margin-top: 40px;
     float: left;
-    overflow-y: auto;
-    /*background-color: grey;*/
+    overflow: auto;
+    //overflow-y: hidden;
+    //overflow: -moz-scrollbars-horizontal;
+    //background-color: grey;
 }
 .img_miniature
 {
-    width: 24%;
+    width: 23%;
     height: 100px;
-    float: left;
+    //float: left;
+    display: inline-block;
     margin-left: 5px;
     margin-right: 5px;
     //background-color: grey;
@@ -184,6 +195,66 @@ a:active
 {
     width: 100%;
     height: 100%;
+}
+
+.gp_miniature
+{
+    width: 23%;
+    height: 100px;
+    float: left;
+/*    display: inline-block;*/
+    //background-color: purple;
+    margin-left: 2.5px;
+    margin-right: 2.5px;
+    text-align: center;
+}
+.gp_miniature input
+{
+    margin: auto;
+    margin-top: 20px;
+}
+
+.modify_img_miniature
+{
+    width: 90%;
+    height: 100px;
+    float: left;
+}
+.modify_img_miniature img
+{
+    width: 100%;
+    height: 100%;
+}
+.supprimer_photo_miniature
+{
+    width: 5%;
+    float: left;
+    //background-color: aqua;
+}
+
+.supprimer_photo_miniature a:link
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: lightgrey;
+}
+.supprimer_photo_miniature a:visited
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: lightgrey;
+}
+.supprimer_photo_miniature a:hover
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: black;
+}
+.supprimer_photo_miniature a:active
+{
+    margin-top: 0px; 
+    text-decoration: none;
+    color: fuchsia;
 }
 /*#next
 {
@@ -195,18 +266,44 @@ a:active
 #enveloppe_text
 {
     width: 56%;
-    height: 500px;
+    height: 440px;
     float: left;
-    /*border-left: solid black 1px;*/
+    //border-left: solid black 1px;
+    //background-color: red;
+    overflow: auto;
 }
 #text
 {
     width: 350px;
-    height: 450px;
+    height: 390px;
     font-size: 20pt;
     text-align: center;
     margin: auto;
     margin-top: 50px;
+    
+}
+
+#va_menu
+{
+    width: 56%;
+    height: 60px;
+    float: left;
+    //background-color: yellow;
+}
+#va_menu fieldset
+{
+    border-radius: 10px;
+}
+#va_menu div
+{
+    width: 33%;
+    float: right;
+    text-align: center;
+    /*background-color: purple;*/
+}
+#va_menu div input
+{
+    text-align: center;
 }
 #infos
 {

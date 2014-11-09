@@ -19,11 +19,17 @@ $today = create_date_today();
 
 $bdd = connexion('annonces_en_ligne', 'localhost', 'root', 'root');
 
-if(isset($_SESSION["conn"]) && $_SESSION["conn"])
+if(isset($_SESSION['conn']) && $_SESSION['conn'])
 {
     $s_login = "unlog";
     $s_url = "disconnect.php";
     $pseudo = 'Bienvenue ' . $_SESSION['pseudo'];
+
+    $lien_menu_annonces =  '<p><a href="./annonces/menu_annonces.php">Menu annonces</a></p>';
+}
+else
+{
+    $lien_menu_annonces = '<p class="disabled">Menu annonces</p>';
 }
 
 if(isset($_REQUEST['index_categorie']))
@@ -60,12 +66,10 @@ and open the template in the editor.
                 </div>
                 <div class="div_banniere"><p id="titre_site"><a href="../index.php">AnnoLigne<br/>Site d'annonce en ligne</a></p></div>
                 <div class="div_banniere">
-                    <a href="../connection/<?php echo $s_url; ?>"><?php echo $s_login; ?></a>
+                    <a href="./connection/<?php echo $s_url; ?>"><?php echo $s_login; ?></a>
                 </div>
                 <div class="div_banniere">
-                    <p><a href="./menu_annonces.php">Menu annonces</a></p>
-                    <p><a href="./ajouter_annonces.php">Insérer annonces</a></p>
-                    <p><a href="./favoris.php">Favoris</a></p>
+                    <?php echo $lien_menu_annonces; ?>
                 </div>
             </div>
             <div id="categorie">
@@ -78,7 +82,12 @@ and open the template in the editor.
                     <input type="submit" name="btn_search" value="search" id="btn_search"/>   
                 </div>
                 <div id="annonce_recherche">
-                    <?php echo display_annonces_from_id(select_annonces_from_categorie($mot_rechercher, $bdd)); ?>
+                    <?php
+                        if(isset($_REQUEST['index_categorie']))
+                        {
+                            echo display_annonces_from_id(select_annonces_from_categorie($mot_rechercher, $bdd)); 
+                        }
+                    ?>
                 </div>
             </div>
             <div id="pied_page">

@@ -34,7 +34,7 @@ and open the template in the editor.
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="Content-Language" content="fr" />
         <meta http-equiv="Content-Script-Type" content="text/javascript" />
-        <link href="../../css/style_annonces_2.css" rel="stylesheet" type="text/css" />
+        <link href="../../css/style_menu_annonces.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <?php
@@ -51,9 +51,6 @@ and open the template in the editor.
                     <a href="../connection/<?php echo $s_url; ?>"><?php echo $s_login; ?></a>
                 </div>
                 <div class="div_banniere">
-                    <a href="./menu_annonces.php">Menu annonces</a><br/>
-                    <a href="./ajouter_annonces.php">Insérer annonces</a><br/>
-                    <a href="./favoris.php">Favoris</a>
                 </div>
             </div>
             <div id="contenent">

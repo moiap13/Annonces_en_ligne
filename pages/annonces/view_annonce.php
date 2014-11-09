@@ -18,6 +18,7 @@ include '../functions.php';
 $s_login = "Login";
 $s_url = "login.php";
 $pseudo = '';
+$input_favoris = '<input type="submit" name="btn_favoris" value="ajouter aux favoris" disabled/>';
 
 $bdd = connexion('annonces_en_ligne', 'localhost', 'root', 'root');
 
@@ -28,6 +29,13 @@ if(isset($_SESSION['conn']) && $_SESSION['conn'])
     $pseudo = 'Bienvenue ' . $_SESSION['pseudo'];
 
     $lien_menu_annonces =  '<p><a href="./menu_annonces.php">Menu annonces</a></p>';
+    
+    $input_favoris = '<input type="submit" name="btn_favoris" value="ajouter aux favoris" />';
+    
+    if(check_favoris($_SESSION["ID"], $_REQUEST['id_annonce'], $bdd) == false)
+    {
+        $input_favoris = '<input type="submit" name="btn_enlever_favoris" value="enlever des favoris" />';
+    }
 }
 else
 {
@@ -41,23 +49,62 @@ if(isset($_REQUEST['id_annonce']))
     /*echo '<pre>';
     var_dump($annonce);
     echo '</pre>';*/
-    $titre = $annonce[0][0];
-    $text = $annonce[0][1];
-    $photo = $annonce[0][2];
-    $date = $annonce[0][3];
-    
-    $user = select_user_from_id($annonce[0][4], $bdd) ;
-    $pseudo_annonceur = $user[0][0];
-    $mail = $user[0][1];
-    
-    if($photo == 1)
+    if(!empty($annonce))
     {
-        $photos = display_photo_view_annonce($_REQUEST['id_annonce']);
+        $date = $annonce[0][3];
+
+        if(get_days_remaning($date)[1] == false)
+        {
+            $titre = '<p class="warning_message">Cette annonce n\'est plus disponible...</p>';
+            $text = "";
+            $photos[0] = "";
+        }
+        else
+        {
+            $titre = $annonce[0][0];
+            $text = $annonce[0][1];
+            $photo = $annonce[0][2];
+
+            if($photo == 1)
+            {
+                $photos = display_photo_view_annonce($_REQUEST['id_annonce']);
+            }
+            else
+            {
+                $photos[0] = '<img src="../../img/image_site/No_Image_Available.png" alt="no_image" />';
+            }
+        }
+
+        $user = select_user_from_id($annonce[0][4], $bdd) ;
+        $pseudo_annonceur = $user[0][0];
+        $mail = $user[0][1];
     }
     else
     {
-        $photos[0] = '<img src="../../img/image_site/No_Image_Available.png" alt="no_image" />';
+        $titre = '<p class="warning_message">Cette annonce est indisponible...</p>';
+        $text = "";
+        $photos[0] = "";
+        $pseudo_annonceur = 'Indisponible';
+        $pseudo_annonceur = "Indisponible";
+        $mail = "";
+        $date = "Indisponible";
     }
+}
+
+
+if(isset($_REQUEST["btn_favoris"]))
+{   
+    if(check_favoris($_SESSION["ID"], $_REQUEST['id_annonce'], $bdd))
+    {
+        ajout_favoris($_SESSION["ID"], $_REQUEST['id_annonce'], $bdd);
+        $input_favoris = '<input type="submit" name="btn_enlever_favoris" value="enlever des favoris" />';
+    }
+}
+
+if(isset($_REQUEST["btn_enlever_favoris"]))
+{   
+    enlever_favoris($_SESSION["ID"], $_REQUEST['id_annonce'], $bdd);
+    $input_favoris = '<input type="submit" name="btn_favoris" value="ajouter aux favoris" />';
 }
 ?>
 <!--
@@ -120,6 +167,16 @@ and open the template in the editor.
                         <div id="text">
                             <?php echo $text; ?>
                         </div>
+                    </div>
+                    <div id="va_menu">
+                        <fieldset>
+                            <legend>Menu</legend>
+                            <div>
+                                <form action="#" method="post">
+                                    <?php echo $input_favoris; ?>
+                                </form>
+                            </div>
+                        </fieldset>
                     </div>
                     <div id="infos">
                         <div class="info">

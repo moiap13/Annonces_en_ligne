@@ -73,7 +73,7 @@ function get_days($date_user)
 function get_days_remaning($date_user)
 {
     $a_day_month = array(31,28,31,30,31,30,31,31,30,31,30,31);
-    $return = "";
+    $return[0] = "";
     
     $date = split_separator($date_user . '-','-');
     
@@ -112,20 +112,22 @@ function get_days_remaning($date_user)
     {
         if($date->format('%R%a') == 0)
         {
-            $return = 'Dernier jour de l\'annonce';
+            $return[0] = 'Dernier jour de l\'annonce';
         }
         else if($date->format('%R%a') == 1)
         {
-            $return = '1 jour restant';
+            $return[0] = '1 jour restant';
         }
         else
         {
-            $return = $date->format('%a jours restants');
+            $return[0] = $date->format('%a jours restants');
         }
+        $return[1] = true;
     }
     else 
     {
-        $return = 'Annonce Expirée';
+        $return[0] = 'Annonce Expirée';
+        $return[1] = false;
     }
     
     return $return;
@@ -194,6 +196,30 @@ function dir_exist($dir)
     return $result;
 }
 
+function supprimer_photo($nom_photo, $id_annonce)
+{
+    if(file_exists('../../img/annonces/' . $id_annonce . '/' . $nom_photo))
+    {
+        unlink('../../img/annonces/' . $id_annonce . '/' . $nom_photo);
+    }
+}
+
+function get_max_nb_for_photo($id_annonce)
+{
+    $array = put_dirfile_array('../../img/annonces/' . $id_annonce . '/');
+    $max_num = split_separator($array[0] . '.', '.')[0];
+    
+    for($i=0;$i<count($array);$i++)
+    {
+        $array[$i] = split_separator($array[$i] . '.', '.')[0];
+        if($array[$i] > $max_num)
+        {
+            $max_num = $array[$i];
+        }
+    }
+    
+    return $max_num+1;
+}
 /*
 * Debug function
 * 
@@ -222,37 +248,75 @@ echo '</pre>';
 function display_last_insert_ads($array)
 {
     $affichage = '';
+    $nb_annonces = 0;
     
-    for($i=0;$i<4;$i++)
+    if(!empty($array))
     {
-        $affichage .= '<div class="titre_derniere_annonce">';
-            $affichage .= '<a href="pages/annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" >' . $array[$i][1] . '</a>';
-        $affichage .= '</div>';
+        for($i=0;$i<4;$i++)
+        {
+            if(isset($array[$i]))
+            {
+                if(get_days_remaning($array[$i][2])[1])
+                {
+                    $affichage .= '<div class="titre_derniere_annonce">';
+                    $affichage .= '<a href="pages/annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" >' . $array[$i][1] . '</a>';
+                    $affichage .= '</div>';
+                    $nb_annonces++;
+                }
+            }
+        }
+
+        if($nb_annonces == 0)
+        {
+            $affichage = '<p class="warning_message">Aucune annonce à afficher</p>';
+        }
     }
-    
+
     return $affichage;
 }
 
 function display_picture_last_insert_ads($array)
 {  
     $affichage = '';
+    $nb_annonces = 0;
     
-    for($i=0;$i<4;$i++)
+    if(!empty($array))
     {
-        if(dir_exist('img/annonces/' . $array[$i][0]))
-        {
-            $str = put_dirfile_array('img/annonces/' . $array[$i][0] . '/');
-            
-            $file_type = split_separator($str[0] . '.', '.');
+        for($i=0;$i<4;$i++)
+        {//var_dump_pre($array);
+            //echo $array[$i][2] . '<br/>';
+            if(isset($array[$i]))
+            {
+                if(get_days_remaning($array[$i][2])[1])
+                {
+                    if(dir_exist('img/annonces/' . $array[$i][0])  && $array[$i][3] == 1)
+                    {
+                        $str = put_dirfile_array('img/annonces/' . $array[$i][0] . '/');
 
-            $affichage .= '<div class="derniere_annonce"><a href="pages/annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" ><img src="img/annonces/' . $array[$i][0] . '/0.' . $file_type[1] .'"/></a></div>';
+                        $file_type = split_separator($str[0] . '.', '.');
 
+                        $affichage .= '<div class="derniere_annonce"><a href="pages/annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" ><img src="img/annonces/' . $array[$i][0] . '/0.' . $file_type[1] .'"/></a></div>';
+
+                    }
+                    else
+                    {
+                        $affichage .= '<div class="derniere_annonce"><a href="pages/annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" ><img src="img/image_site/No_Image_Available.png" width="100px" height="100px" /></a></div>';
+                    }
+                    $nb_annonces++;
+                }
+            }
         }
-        else
+
+        if($nb_annonces == 0)
         {
-            $affichage .= '<div class="derniere_annonce"><a href="pages/annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" ><img src="img/image_site/No_Image_Available.png" width="100px" height="100px" /></a></div>';
+            $affichage = '<p class="warning_message">Aucune annonce à afficher</p>';
         }
     }
+    else
+    {
+       $affichage = '<p class="warning_message">Aucune annonce à afficher</p>'; 
+    }
+    
     
     return $affichage;
 }
@@ -295,6 +359,30 @@ function display_photo_miniatures($array)
     return $affichage;
 }
 
+function display_photo_miniatures_modify($array, $id_annonce)
+{
+    $affichage = '';
+    if(dir_exist('../../img/annonces/' . $id_annonce))
+    {
+        $a_images = put_dirfile_array('../../img/annonces/' . $id_annonce . '/');
+    }
+    for($i=1;$i<count($array)-1;$i++)
+    {
+        $affichage .= '<div class="gp_miniature"><div class="modify_img_miniature">';
+            $affichage .= $array[$i];
+        $affichage .= '</div>';
+        $affichage .= '<div class="supprimer_photo_miniature"><a href="modify_annonce.php?id_annonce='.$id_annonce.'&photo_supprimer='. $a_images[$i] . '">x</a></div></div>';
+    }
+    
+    $affichage .=   '<div class="gp_miniature">' .
+                        '<form action="modify_annonce.php?id_annonce='.$id_annonce.'" method="post" enctype="multipart/form-data">' .
+                            '<input type="file" name="photos[]" multiple/><br/>' .
+                            '<input type="submit" name="btn_ajout_photo" value"Ajouter" />' .
+                        '</form>' .
+                    '</div>';
+    return $affichage;
+}
+
 function display_table_favoris($array, $array_id_annonces)
 {
     $affichage = '';
@@ -318,10 +406,13 @@ function display_table_favoris($array, $array_id_annonces)
                 $affichage .= '<a href="./view_annonce.php?id_annonce='. $array_id_annonces[$i][0] .'" ><img src="../../img/image_site/No_Image_Available.png" width="100px" height="100px" /></a>';
             }
 
-                $affichage .= '</div>'.
+                $affichage .=   '</div>'.
+                                '<div class="menu_rapide">' .
+                                    '<div><a href="?DELETE_FAVORIS='. $array_id_annonces[$i][0] .'">x</a></div>' .
+                                '</div>' .
                                     '<div class="titre_favoris"><a href="./view_annonce.php?id_annonce='. $array_id_annonces[$i][0] .'" >'. $array[$i][1] .'</a></div>'.
                                     '<div class="text_favoris">'. $array[$i][2] .'</div>' .
-                                '</div>';
+                            '</div>';
         }
     }
     else
@@ -359,9 +450,15 @@ function display_table_user_annonces($array)
             }
 
              $affichage .= '</div>'.
+                     '<div class="menu_rapide">' .
+                      '<div><a href="confirm_delete.php?id_ads='.$array[$i][0].'">x</a></div>' .
+                        '<div><a href="modify_annonce.php?id_annonce='. $array[$i][0] .'">✍</a></div>' .
+                      '</div>' .
                         '<div class="titre_user_annonce"><a href="./view_annonce.php?id_annonce='. $array[$i][0] .'" >'. $array[$i][1] .'</a></div>'.
+                     
                         '<div class="date_user_annonces">'. $array[$i][2] .'</div>' .
-                        '<div class="date_user_annonces">'. get_days_remaning($array[$i][2] . '-') .'</div>' .
+                        '<div class="date_user_annonces">'. get_days_remaning($array[$i][2] . '-')[0] .'</div>' .
+                        
                     '</div>';
         }
     }
@@ -431,35 +528,57 @@ function display_annonces_from_id($array)
     var_dump($array);
     echo '</pre>';*/
     $affichage = '<div id="annonce_trouvee">';
+    $annonce = "";
    
     if(count($array) == 0)
     {
         $affichage = '<p class="warning_message">Aucune annonce à afficher</p>';
+        
+        $b_annonces = true;
     }
     else
     {
         for($i=0;$i<count($array);$i++)
         {
-            $affichage .= '<div id="annonces_recherche_photo">';
-            if($array[$i][3] == 1)
+            if(get_days_remaning($array[$i][4])[1])
             {
-                $str = put_dirfile_array('../img/annonces/' . $array[$i][0] . '/');
-                $file_type = split_separator($str[0] . '.', '.');
+                $b_annonces = true;
+                
+                $annonce .= '<div id="annonces_recherche_photo">';
+                if($array[$i][3] == 1)
+                {
+                    $str = put_dirfile_array('../img/annonces/' . $array[$i][0] . '/');
+                    $file_type = split_separator($str[0] . '.', '.');
 
-                $affichage .= '<a href="./annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" ><img src="'. '../img/annonces/' . $array[$i][0] . '/0.' . $file_type[1] .'" width="200" height="200"/></a>';
+                    $annonce .= '<a href="./annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" ><img src="'. '../img/annonces/' . $array[$i][0] . '/0.' . $file_type[1] .'" width="200" height="200"/></a>';
+                }
+                else
+                {
+                    $annonce .= '<a href="./annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" ><img src="../img/image_site/No_Image_Available.png" alt="" width="200" height="200"/></a>';
+                }
+                $annonce .= '</div>';
+                $annonce .= '<div id="annonces_recherche_titre"><a href="./annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" >' . $array[$i][1] . '</a></div>';
+                $annonce .= '<div id="annonces_recherche_texte">' . $array[$i][2] . '</div>';
+                $annonce .= '<div id="annonces_recherche_prix">Non Spécifié</div>';
             }
             else
             {
-                $affichage .= '<img src="../img/image_site/No_Image_Available.png" alt="" width="200" height="200"/>';
+                $b_annonces = false;
             }
-            $affichage .= '</div>';
-            $affichage .= '<div id="annonces_recherche_titre"><a href="./annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" >' . $array[$i][1] . '</a></div>';
-            $affichage .= '<div id="annonces_recherche_texte">' . $array[$i][2] . '</div>';
-            $affichage .= '<div id="annonces_recherche_prix">Non Spécifié</div>';
+            
         }
+        $annonce .= "</div>";
     }
     
-    $affichage .= '</div>';
+    if($b_annonces)
+    {
+        $affichage .= $annonce;
+    }
+    else
+    {
+        $affichage = '<p class="warning_message">Aucune annonce à afficher</p>';
+    }
+    
     
     return $affichage;
 }
@@ -541,9 +660,51 @@ function ajout_personne($user, $password, $mail, $bdd)
     $ajout->execute();
 }
 
+function ajout_favoris($id_user, $id_annonce, $bdd)
+{
+    $ajout = $bdd->prepare('insert into favoris(id_user,id_annonce) values("' . $id_user . '","' . $id_annonce . '")');
+    $ajout->execute();
+}
+
+function select_favoris($bdd)
+{
+    $request = $bdd->query("select id_user, id_annonce from favoris ");
+    $request = $request->fetchAll();
+    return $request;
+}
+
+function select_favoris_from_id($id_user, $bdd)
+{
+    $request = $bdd->query("select id_user, id_annonce from favoris where id_user =  " . $id_user);
+    $request = $request->fetchAll();
+    return $request;
+}
+
+function enlever_favoris($id_user, $id_annonce, $bdd)
+{
+    $ajout = $bdd->prepare('DELETE FROM favoris WHERE id_user = ' . $id_user . ' && id_annonce = ' . $id_annonce);
+    $ajout->execute();
+}
+
+function check_favoris($id_user, $id_annonce, $bdd)
+{
+    $favoris = select_favoris_from_id($id_user, $bdd);
+    $result = true;
+    
+    for($i=0;$i<count($favoris);$i++)
+    {
+        if($favoris[$i][1] == $id_annonce)
+        {
+            $result = false;
+        }
+    }
+    
+    return $result;
+}
+
 function select_last_insert_ads($bdd)
 {
-    $request = $bdd->query("select id_annonce,titre from annonces order by date_debut desc");
+    $request = $bdd->query("select id_annonce, titre, date_debut, photos from annonces order by date_debut desc");
     $request = $request->fetchAll();
     return $request;
 }
@@ -621,7 +782,7 @@ function ajout_annonce($titre, $text, $date,$id_user,$id_categorie,$active, $pho
 
 function select_annonces_from_categorie($nom_categorie, $bdd)
 {
-    $request = $bdd->query('select id_annonce, titre, text, photos from annonces natural join categorie where nom_categorie = "' . $nom_categorie .'"');
+    $request = $bdd->query('select id_annonce, titre, text, photos, date_debut from annonces natural join categorie where nom_categorie = "' . $nom_categorie .'"');
     return $request->fetchAll(); 
 }
 
@@ -635,4 +796,16 @@ function select_user_from_id($id, $bdd)
 {
    $request = $bdd->query('select pseudo, mail from user where id_user = ' . $id);
    return $request->fetchAll(); 
+}
+
+function delete_ads($id_ads, $bdd)
+{
+    $ajout = $bdd->prepare('DELETE FROM annonces WHERE id_annonce = ' . $id_ads);
+    $ajout->execute();
+}
+
+function update_ads($id_ads, $titre, $text, $date, $bdd)
+{
+    $ajout = $bdd->prepare('UPDATE annonces SET titre="'.$titre.'", text="'. $text .'", date_debut="'. $date.'" WHERE id_annonce=' . $id_ads);
+    $ajout->execute();
 }

@@ -88,6 +88,11 @@ if(isset($_REQUEST["btn_poster"]))
     }
 }
 
+if(isset($_REQUEST["DELETE_FAVORIS"]))
+{
+    enlever_favoris($_SESSION["ID"], $_REQUEST["DELETE_FAVORIS"], $bdd);
+}
+
 ?>
 <!--
 To change this template, choose Tools | Templates
@@ -120,8 +125,6 @@ and open the template in the editor.
                 </div>
                 <div class="div_banniere">
                     <p><a href="./menu_annonces.php">Menu annonces</a></p>
-                    <p><a href="./ajouter_annonces.php">Insérer annonces</a></p>
-                    <p><a href="./favoris.php">Favoris</a></p>
                 </div>
             </div>
             <div id="contenent">
@@ -209,12 +212,13 @@ and open the template in the editor.
         <script type="text/javascript">
             //Insere ton Javascript ;P
             
-            function test(num)
+            
+            function test()
             {
                 var categorie = document.getElementById("cb_categorie");
                 var tbx = document.getElementById("tbx_autre");
 
-                if(num == "new")
+                if(categorie.value == "new")
                 {
                     tbx.type = "text";
                     tbx.required = true;
@@ -225,6 +229,8 @@ and open the template in the editor.
                     tbx.required = false;
                 }
             }
+            
+            document.onload = test();
         </script>
     </body>
 </html>
