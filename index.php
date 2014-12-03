@@ -75,9 +75,11 @@ and open the template in the editor.
             </div>
             <div id="contenent">
                 <div id='recherche'>
-                    <label>Recherche :</label>
-                    <input type="text" name="tbx_search" placeholder="Recherche..." id="tbx_search"/>
-                    <input type="image" src="img/image_site/image_search.png" name="btn_search"  id="btn_search"/>   
+                    <form method="get" action="./pages/recherche.php">
+                        <label>Recherche :</label>
+                        <input type="text" name="tbx_search" placeholder="Recherche..." id="tbx_search"/>
+                        <input type="Submit" name="btn_search"  id="btn_search" value="Rechercher"/>  
+                    </form>
                 </div>
                 <p>Dernières annonces :</p>
                 <div id="derniere_annonces">

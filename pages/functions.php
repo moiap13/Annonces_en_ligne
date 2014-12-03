@@ -7,6 +7,20 @@ function var_dump_pre($var)
     echo '</pre>';
 }
 
+function there_is_digit($str)
+{
+    $pathern = '#[^0-9]#';
+    
+    if(preg_match($pathern,$str))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 function split_separator($str, $separator)
 {
     $array = array();
@@ -30,6 +44,35 @@ function split_separator($str, $separator)
             }
         }
     }
+    
+    return $array;
+}
+
+function split_spaces($str)
+{
+    $array = array();
+    $str_2 = "";
+    $i_index_str = 0;
+    
+    $i_index = 0;
+    
+    while(($i_index_str = strpos($str, ' ')) !== false)
+    {
+        for($i=0;$i<=$i_index_str;$i++)
+        {
+            if($i != $i_index_str && $str[$i] != '#')
+            {
+                $str_2 .= $str[$i];
+            }
+            
+            $str[$i] = '#';
+        }
+        
+        $array[$i_index] = $str_2;
+        $i_index++;
+        $str_2 = "";
+    }
+    
     
     return $array;
 }
@@ -196,6 +239,32 @@ function dir_exist($dir)
     return $result;
 }
 
+function copie_donnee_unique($array)
+{
+    //var_dump_pre($array);
+    $array_result[0] = $array[0];
+    
+    for($i=0;$i<count($array);$i++)
+    {
+        $b_ajout = true;
+        
+        for($y=0;$y<count($array_result);$y++)
+        {
+            if($array[$i] == $array_result[$y])
+            {
+                $b_ajout = false;
+            }
+        }
+        
+        if($b_ajout)
+        {
+            $array_result[count($array_result)] = $array[$i];
+        }
+    }
+    //var_dump_pre($array_result);
+    return $array_result;
+}
+
 function supprimer_photo($nom_photo, $id_annonce)
 {
     if(file_exists('../../img/annonces/' . $id_annonce . '/' . $nom_photo))
@@ -244,6 +313,217 @@ if (is_null($sObj))
 
 echo '</pre>';
 }
+
+/************************************************************************************************************************/
+
+/*
+ * @param type $db_name : the name of the database where you want to connect
+ * @param type $host : the adress from the host
+ * @param type $user : the user who want to connect to the database
+ * @param type $pwd : the password
+ * @return type : return an connection PDO
+ */
+function connexion($db_name, $host, $user, $pwd)
+{
+    try {
+        $bdd = new PDO('mysql:dbname=' . $db_name . ';host=' . $host, $user, $pwd);
+        $bdd ->exec("SET CHARACTER SET utf8");
+    } catch (PDOException $e) {
+        echo 'Connection failed: ' . $e->getMessage();
+        $bdd = $e->getMessage();
+    }
+    
+    return $bdd;
+}
+
+function count_nb_user($bdd)
+{
+    $request = $bdd->query("select count(pseudo) from user");
+    $request = $request->fetchAll();
+    return $request[0][0];
+}
+
+function recuperer_id()
+{
+    $request = $bdd->query("select id_user from user");
+    $request = $request->fetchAll();
+    return $request[0][0];
+}
+
+function login_connection($users, $password, $bdd)
+{
+    $return = false;
+    
+    $nb_entite = count_nb_user($bdd);
+    
+    $request_pseudo = $bdd->query("select pseudo from user");
+    $request_pseudo = $request_pseudo->fetchAll();
+    
+    $request_mail = $bdd->query("select mail from user");
+    $request_mail = $request_mail->fetchAll();
+    
+    $request_pwd = $bdd->query("select mdp from user");
+    $request_pwd = $request_pwd->fetchAll();
+    
+    $request_id = $bdd->query("select id_user from user");
+    $request_id = $request_id->fetchAll();
+    
+    for($i=0;$i<$nb_entite;$i++)
+    {
+        $data_user = $request_pseudo[$i][0];
+        
+        $data_mail = $request_mail[$i][0];
+
+        $data_pwd = $request_pwd[$i][0];
+
+        if(($users == $data_user || $users == $data_mail ) && $password == $data_pwd)
+        {
+            $return = true;
+            $_SESSION['ID'] = $request_id[$i][0];
+        }
+    } 
+    
+    return $return;
+}
+
+function search($array, $bdd)
+{
+    $id_annonces = array();
+    $titre = array();
+    $text = array();
+    $photo = array();
+    $date_debut = array();
+    $array_text_gras = array();
+    
+    for($i=0;$i<count($array);$i++)
+    {
+        $request_annonces = $bdd->query('SELECT id_annonce FROM annonces WHERE titre like "%'.trim(strtolower($array[$i])).'%" OR text like "%'.trim(strtolower($array[$i])).'%"');
+        $request_annonces = $request_annonces->fetchAll();
+        
+        for($y=0;$y<count($request_annonces);$y++)
+        {
+            $id_annonces[] = $request_annonces[$y][0];
+        } 
+    }
+    
+    if(isset($id_annonces) && !empty($id_annonces))
+    {
+        $annonces = copie_donnee_unique($id_annonces);
+    }
+    
+    
+    if(!empty($annonces) && $annonces != null)
+    {
+        $id_annonces = array();
+        
+        for($y=0;$y<count($annonces);$y++)
+        {
+            if($annonces[$y] != null)
+            {
+                $request_annonces = $bdd->query('SELECT id_annonce, titre, text, photos, date_debut FROM annonces WHERE id_annonce=' . $annonces[$y]);
+                $request_annonces = $request_annonces->fetchAll();
+                for($c=0;$c<count($request_annonces);$c++)
+                {   
+                    $id_annonces[] = $request_annonces[$c][0];
+                    $titre[] = $request_annonces[$c][1];
+                    $text[] = $request_annonces[$c][2];
+                    $photo[] = $request_annonces[$c][3]; 
+                    $date_debut[] = $request_annonces[$c][4]; 
+                }
+            }
+            else
+            {
+                echo 'null';
+            }
+        }
+    }
+    
+    for($i=0;$i<count($titre);$i++)
+    {
+        $array_text_gras[$i] = array();
+        $array_text_gras[$i][0] = $id_annonces[$i];
+        $array_text_gras[$i][1] = $titre[$i];
+        $array_text_gras[$i][2] = $text[$i];
+        $array_text_gras[$i][3] = $photo[$i];
+        $array_text_gras[$i][4] = $date_debut[$i];
+    }
+    
+    for($i=0;$i<count($array);$i++)
+    {
+        for($y=0;$y<count($array_text_gras);$y++)
+        {
+            for($z=0;$z<count($array_text_gras[$y]);$z++)
+            {
+                $array_text_gras[$y][$z] = mettre_text_en_gras(trim($array[$i]), $array_text_gras[$y][$z]);
+            }
+        }  
+    }
+    
+    return $array_text_gras;
+}
+
+function mettre_text_en_gras($mot_rechercher,$plage)
+{
+    $array_tmp = array();
+    
+    $index = 0;
+    $count_char = 0;
+    $b_fin = false;
+
+    $array_tmp[$index] = $plage;
+    
+    while($b_fin == false)
+    {
+        for($y=0;$y<strlen($array_tmp[$index]);$y++)
+        {
+            if(isset($mot_rechercher[0]) && $mot_rechercher[0] == $array_tmp[$index][$y])
+            {
+                $a = 0;
+                $b = $y;
+
+                for($v=0;$v<strlen($mot_rechercher);$v++)
+                {
+                    if
+                    (
+                        isset($mot_rechercher[$v + $a]) &&  
+                        isset($array_tmp[$index][$v + $b]) && 
+                        $mot_rechercher[$v + $a] == $array_tmp[$index][$v + $b]
+                    )
+                    {
+                        $count_char++;
+                       
+                        if($count_char == strlen($mot_rechercher))
+                        {
+                            $b_fin = false;
+                            $array_tmp[$index + 1] = "";
+
+                            for($x=0;$x<$b;$x++)
+                            {
+                                $array_tmp[$index + 1] .= $array_tmp[$index][$x];
+                            }
+                            $array_tmp[$index + 1] .= '<span class="warning_message">' . strtoupper($mot_rechercher) . "</span>";
+
+                            for($x=$b+strlen($mot_rechercher);$x<strlen($array_tmp[$index]);$x++)
+                            {
+                                $array_tmp[$index + 1] .= $array_tmp[$index][$x];
+                            }
+
+                            $index++;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                $count_char = 0;
+                $b_fin = true;
+            }
+        }
+    }
+    
+    return $array_tmp[$index];
+}
+/************************************************************************************************************************/
 
 function display_last_insert_ads($array)
 {
@@ -522,22 +802,24 @@ function display_index_categorie($array, $mode)
     return $affichage;
 }
 
-function display_annonces_from_id($array)
+function display_annonces_search($array)
 {
-    /*echo '<pre>';
-    var_dump($array);
-    echo '</pre>';*/
+//    echo '<pre>';
+//    var_dump($array);
+//    echo '</pre>';
+    
     $affichage = '<div id="annonce_trouvee">';
     $annonce = "";
    
     if(count($array) == 0)
     {
+        
         $affichage = '<p class="warning_message">Aucune annonce à afficher</p>';
         
         $b_annonces = true;
     }
     else
-    {
+    {   
         for($i=0;$i<count($array);$i++)
         {
             if(get_days_remaning($array[$i][4])[1])
@@ -545,6 +827,7 @@ function display_annonces_from_id($array)
                 $b_annonces = true;
                 
                 $annonce .= '<div id="annonces_recherche_photo">';
+                
                 if($array[$i][3] == 1)
                 {
                     $str = put_dirfile_array('../img/annonces/' . $array[$i][0] . '/');
@@ -556,6 +839,7 @@ function display_annonces_from_id($array)
                 {
                     $annonce .= '<a href="./annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" ><img src="../img/image_site/No_Image_Available.png" alt="" width="200" height="200"/></a>';
                 }
+                
                 $annonce .= '</div>';
                 $annonce .= '<div id="annonces_recherche_titre"><a href="./annonces/view_annonce.php?id_annonce='. $array[$i][0] .'" >' . $array[$i][1] . '</a></div>';
                 $annonce .= '<div id="annonces_recherche_texte">' . $array[$i][2] . '</div>';
@@ -570,89 +854,18 @@ function display_annonces_from_id($array)
         $annonce .= "</div>";
     }
     
-    if($b_annonces)
-    {
-        $affichage .= $annonce;
-    }
-    else
+    if(empty($annonce))
     {
         $affichage = '<p class="warning_message">Aucune annonce à afficher</p>';
     }
-    
+    else
+    {
+        $affichage .= $annonce;
+    }
     
     return $affichage;
 }
 /************************************************************************************************************************/
-
-/*
- * @param type $db_name : the name of the database where you want to connect
- * @param type $host : the adress from the host
- * @param type $user : the user who want to connect to the database
- * @param type $pwd : the password
- * @return type : return an connection PDO
- */
-function connexion($db_name, $host, $user, $pwd)
-{
-    try {
-        $bdd = new PDO('mysql:dbname=' . $db_name . ';host=' . $host, $user, $pwd);
-        $bdd ->exec("SET CHARACTER SET utf8");
-    } catch (PDOException $e) {
-        echo 'Connection failed: ' . $e->getMessage();
-        $bdd = $e->getMessage();
-    }
-    
-    return $bdd;
-}
-
-function count_nb_user($bdd)
-{
-    $request = $bdd->query("select count(pseudo) from user");
-    $request = $request->fetchAll();
-    return $request[0][0];
-}
-
-function recuperer_id()
-{
-    $request = $bdd->query("select id_user from user");
-    $request = $request->fetchAll();
-    return $request[0][0];
-}
-
-function login_connection($users, $password, $bdd)
-{
-    $return = false;
-    
-    $nb_entite = count_nb_user($bdd);
-    
-    $request_pseudo = $bdd->query("select pseudo from user");
-    $request_pseudo = $request_pseudo->fetchAll();
-    
-    $request_mail = $bdd->query("select mail from user");
-    $request_mail = $request_mail->fetchAll();
-    
-    $request_pwd = $bdd->query("select mdp from user");
-    $request_pwd = $request_pwd->fetchAll();
-    
-    $request_id = $bdd->query("select id_user from user");
-    $request_id = $request_id->fetchAll();
-    
-    for($i=0;$i<$nb_entite;$i++)
-    {
-        $data_user = $request_pseudo[$i][0];
-        
-        $data_mail = $request_mail[$i][0];
-
-        $data_pwd = $request_pwd[$i][0];
-
-        if(($users == $data_user || $users == $data_mail ) && $password == $data_pwd)
-        {
-            $return = true;
-            $_SESSION['ID'] = $request_id[$i][0];
-        }
-    } 
-    
-    return $return;
-}
 
 function ajout_personne($user, $password, $mail, $bdd)
 {
@@ -772,6 +985,9 @@ function insert_categorie($nom_categorie, $bdd)
 
 function ajout_annonce($titre, $text, $date,$id_user,$id_categorie,$active, $photos, $bdd)
 {
+    $titre = strtolower($titre);
+    $text = strtolower($text);
+    
     $sql = 'insert into annonces(titre, text, date_debut, id_user, id_categorie, active, photos) values("'.$titre.'","'.$text.'","'. $date .'",'. $id_user .','. $id_categorie .','. $active .','. $photos. ' )';
     
     $request = $bdd->prepare($sql);

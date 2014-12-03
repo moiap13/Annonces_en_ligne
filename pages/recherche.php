@@ -17,6 +17,8 @@ $pseudo = '';
 $mot_rechercher = '';
 $today = create_date_today();
 
+$s_word_search = "";
+
 $bdd = connexion('annonces_en_ligne', 'localhost', 'root', 'root');
 
 if(isset($_SESSION['conn']) && $_SESSION['conn'])
@@ -34,10 +36,25 @@ else
 
 if(isset($_REQUEST['index_categorie']))
 {
-    $mot_rechercher = $_REQUEST['index_categorie'];
+    $s_word_search = $_REQUEST['index_categorie'];
 }
 
-
+if(isset($_REQUEST['tbx_search']))
+{
+    if(there_is_digit($_REQUEST['tbx_search']))
+    {
+        $s_word_search = $_REQUEST['tbx_search'];
+        $array[0] = strtolower($s_word_search);
+        $test = array_merge($array, split_spaces(strtolower($s_word_search) . ' '));
+        
+    }
+    
+    else
+    {
+        $s_word_search = "Vous avez entrer un ou plusieurs chiffres";
+        $test = null;
+    }      
+}
 ?>
 <!--
 To change this template, choose Tools | Templates
@@ -77,16 +94,23 @@ and open the template in the editor.
             </div>
             <div id="contenent">
                 <div id='recherche'>
-                    <label>Recherche :</label>
-                    <input type="text" name="tbx_search" placeholder="Recherche..." id="tbx_search" value="<?php echo $mot_rechercher; ?>"/>
-                    <input type="submit" name="btn_search" value="search" id="btn_search"/>   
+                    <form method="get" action="#">
+                        <label>Recherche :</label>
+                        <input type="text" name="tbx_search" placeholder="Recherche..." id="tbx_search" value="<?php if(isset($_REQUEST['index_categorie']))echo "CATEGORIE::". $s_word_search;else if(isset($_REQUEST['tbx_search']))  echo $s_word_search; ?>"/>
+                        <input type="submit" name="btn_search" value="search" id="btn_search"/>   
+                    <form>
                 </div>
                 <div id="annonce_recherche">
                     <?php
                         if(isset($_REQUEST['index_categorie']))
                         {
-                            echo display_annonces_from_id(select_annonces_from_categorie($mot_rechercher, $bdd)); 
+                            echo display_annonces_search(select_annonces_from_categorie($s_word_search, $bdd)); 
                         }
+                        if(isset($_REQUEST['tbx_search']))
+                        {
+                            echo display_annonces_search(search($test, $bdd)); 
+                        }
+                        
                     ?>
                 </div>
             </div>
